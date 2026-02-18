@@ -1,0 +1,4 @@
+build/
+/*.pdf
+.indent.log
+.vscode/
