@@ -74,7 +74,27 @@ def check(form_info: list[dict], df_row: pd.Series) -> dict:
 
     for entry in form_info:
         if entry.get('part_of_speech') == 'N':
-            pass
+            # check pos and skip if not noun
+            uni_pos = df_row.get('part_of_speech')
+            if uni_pos != 'N':
+                continue
+
+            # check if case and number match
+            words_case = entry.get('case')
+            uni_case = df_row.get('case')
+
+            words_num = entry.get('number')
+            uni_num = df_row.get('number')
+
+            # TODO: handle combined case tags
+            if (words_case != uni_case):
+                continue # no match - skip to next entry
+
+            if (uni_num == 'SG' and words_num != 'S') or (uni_num == 'PL' and words_num != 'P'):
+                continue
+
+            # found match so return it
+            return entry
 
         elif entry.get('part_of_speech') == 'V':
             # check pos
@@ -148,6 +168,9 @@ def check(form_info: list[dict], df_row: pd.Series) -> dict:
             words_gender = entry.get('gender')
             uni_gender = df_row.get('gender')
 
+            # TODO: revise combined case tag handling
+            # for now, just check if the case in words matches either of the cases in the combined tag in unimorph
+
             # if it is not the combined tag, then the case in unimorph and words should match exactly
             if uni_case != 'GEN+DAT':
                 if (words_case != uni_case):
@@ -185,6 +208,8 @@ def check(form_info: list[dict], df_row: pd.Series) -> dict:
 
                 words_gender = entry.get('gender')
                 uni_gender = df_row.get('gender')
+
+                # TODO: revise combined case tag handling
 
                 # if it is not the combined tag, then the case in unimorph and words should match exactly
                 if uni_case != 'GEN+DAT':
@@ -256,7 +281,7 @@ def check(form_info: list[dict], df_row: pd.Series) -> dict:
             words_case = entry.get('case')
             uni_case = df_row.get('case')
 
-            # TODO: handle combined case tags:
+            # TODO: revise combined case tag handling
 
             # if it is not the combined tag, then the case in unimorph and words should match exactly
             if uni_case != 'GEN+DAT':
@@ -274,9 +299,6 @@ def check(form_info: list[dict], df_row: pd.Series) -> dict:
             # skip other parts of speech since unimorph does not contain
             continue
     
-
-
-
 
 def get_tag_mapping(field: str) -> dict:
     """
@@ -435,7 +457,7 @@ if __name__ == "__main__":
     # self.df["lang_specific"] = self.df["features"].str.extract(r'\b(LGSPEC1)\b') # supine
 
     # load sample data for testing
-    df = pd.read_csv("/home/amys/words/sample_data_2.csv", dtype=str)
+    df = pd.read_csv("/home/amys/words/sample_data.csv", dtype=str)
 
     if debug:
         print(df.head())
@@ -478,7 +500,7 @@ if __name__ == "__main__":
 
 
     # save dataframe to file
-    df.to_csv("/home/amys/words/words_data_test.csv", index=False)
+    df.to_csv("/home/amys/words/words_data_test_2.csv", index=False)
 
 
     # close words program
