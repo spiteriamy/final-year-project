@@ -9,5 +9,26 @@
 \section{Dataset}%
 \label{sec:dataset}
 
+\subsection{Intent Classification Dataset}
+\label{sec:intent_classification_dataset}
+
+\textbf{question templates}
+
+the templates are stored in a json file.
+it consists of "placeholders" and "intents".
+the placeholders are the variables that can be replaced with actual values to generate questions.
+for example, WORD is a placeholder that can be replaced with any latin word from the dataset to generate a question.
+other placeholders include NUMBER, TENSE, PERSON, etc.
+these can be replaced with the corresponding values to generate questions.
+these placeholders allow for the generation of a large number of questions from a limited set of templates, as they can be combined in various ways to create different questions.
+the intents are the categories or labels that the questions belong to.
+each intent represents a specific type of question that the system should be able to understand and respond to.
+for example, an intent could be "conjugation" which would include questions related to verb conjugation, or "declension" which would include questions related to noun declension, etc.
+each intent contains the list of target labels that the questions under that intent can be classified into.
+and also the list of templates.
+each template contains the text and the slots.
+the text is the actual question template with the placeholders, and the slots are the corresponding placeholders that need to be filled in to generate a complete question.
+
+
 \section{Intent Classification Model}%
 \label{sec:intent_classification_model}
