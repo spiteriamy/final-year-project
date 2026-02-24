@@ -9,7 +9,9 @@
             "proper name"
         ],
         "PERSON": [
-            ""
+            "1st person",
+            "2nd person",
+            "3rd person"
         ],
         "MOOD": [
             "indicative",
@@ -21,14 +23,14 @@
             "past",
             "future"
         ],
-        "VOICE": [
-            "active",
-            "passive"
-        ],
         "ASPECT": [
             "imperfective",
             "perfective",
             "perfect"
+        ],
+        "VOICE": [
+            "active",
+            "passive"
         ],
         "NUMBER": [
             "singular",
@@ -40,7 +42,8 @@
             "genitive",
             "dative",
             "ablative",
-            "vocative"
+            "vocative",
+            "locative"
         ],
         "GENDER": [
             "masculine",
@@ -48,17 +51,17 @@
             "neuter"
         ],
         "DECLENSION": [
-            "1st declension",
-            "2nd declension",
-            "3rd declension",
-            "4th declension",
-            "5th declension"
+            "",
+            "",
+            "",
+            "",
+            ""
         ],
         "CONJUGATION": [
-            "1st conjugation",
-            "2nd conjugation",
-            "3rd conjugation",
-            "4th conjugation"
+            "",
+            "",
+            "",
+            ""
         ]
     },
     "intents": {
@@ -92,45 +95,17 @@
                     ]
                 },
                 {
-                    "text": "Is {WORD} a noun?",
+                    "text": "Is {WORD} a {PART_OF_SPEECH}?",
                     "slots": [
-                        "WORD"
+                        "WORD",
+                        "PART_OF_SPEECH"
                     ]
                 },
                 {
-                    "text": "Is {WORD} a verb?",
+                    "text": "Does {WORD} function as a {PART_OF_SPEECH}?",
                     "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} an adjective?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} a participle?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} a verb form?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Does {WORD} function as an adjective?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Does {WORD} function as a participle?",
-                    "slots": [
-                        "WORD"
+                        "WORD",
+                        "PART_OF_SPEECH"
                     ]
                 },
                 {
@@ -196,21 +171,10 @@
                     ]
                 },
                 {
-                    "text": "Is {WORD} in the 1st person?",
+                    "text": "Is {WORD} in the {PERSON}?",
                     "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the 2nd person?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the 3rd person?",
-                    "slots": [
-                        "WORD"
+                        "WORD",
+                        "PERSON"
                     ]
                 },
                 {
@@ -226,39 +190,17 @@
                     ]
                 },
                 {
-                    "text": "Is {WORD} in the 1st person singular?",
+                    "text": "Is {WORD} in the {PERSON} singular?",
                     "slots": [
-                        "WORD"
+                        "WORD",
+                        "PERSON"
                     ]
                 },
                 {
-                    "text": "Is {WORD} in the 1st person plural?",
+                    "text": "Is {WORD} in the {PERSON} plural?",
                     "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the 2nd person singular?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the 2nd person plural?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the 3rd person singular?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the 3rd person plural?",
-                    "slots": [
-                        "WORD"
+                        "WORD",
+                        "PERSON"
                     ]
                 },
                 {
@@ -287,57 +229,24 @@
                     ]
                 },
                 {
-                    "text": "Is {WORD} subjunctive?",
+                    "text": "Is {WORD} {MOOD}?",
                     "slots": [
-                        "WORD"
+                        "WORD",
+                        "MOOD"
                     ]
                 },
                 {
-                    "text": "Is {WORD} imperative?",
+                    "text": "Is {WORD} in the {MOOD} mood?",
                     "slots": [
-                        "WORD"
+                        "WORD",
+                        "MOOD"
                     ]
                 },
                 {
-                    "text": "Is {WORD} indicative?",
+                    "text": "Is {WORD} in the {MOOD}?",
                     "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the imperative mood?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the subjunctive mood?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the indicative mood?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the imperative?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the subjunctive?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the indicative?",
-                    "slots": [
-                        "WORD"
+                        "WORD",
+                        "MOOD"
                     ]
                 },
                 {
@@ -396,75 +305,32 @@
                     ]
                 },
                 {
-                    "text": "Is {WORD} present tense?",
+                    "text": "Is {WORD} {TENSE} tense?",
                     "slots": [
-                        "WORD"
+                        "WORD",
+                        "TENSE"
+                    ]
+                },
+
+                {
+                    "text": "Is {WORD} {TENSE}?",
+                    "slots": [
+                        "WORD",
+                        "TENSE"
                     ]
                 },
                 {
-                    "text": "Is {WORD} past tense?",
+                    "text": "Is {WORD} in the {TENSE} tense?",
                     "slots": [
-                        "WORD"
+                        "WORD",
+                        "TENSE"
                     ]
                 },
                 {
-                    "text": "Is {WORD} future tense?",
+                    "text": "Is {WORD} in the {TENSE}?",
                     "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} present?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} past?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} future?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the present tense?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the past tense?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the future tense?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the present?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the past?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the future?",
-                    "slots": [
-                        "WORD"
+                        "WORD",
+                        "TENSE"
                     ]
                 },
                 {
@@ -511,9 +377,10 @@
                     ]
                 },
                 {
-                    "text": "Is {WORD} passive?",
+                    "text": "Is {WORD} {VOICE}?",
                     "slots": [
-                        "WORD"
+                        "WORD",
+                        "VOICE"
                     ]
                 },
                 {
@@ -528,22 +395,12 @@
                         "WORD"
                     ]
                 },
+                
                 {
-                    "text": "Is {WORD} active?",
+                    "text": "Is {WORD} in the {VOICE} voice?",
                     "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the active voice?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the passive voice?",
-                    "slots": [
-                        "WORD"
+                        "WORD",
+                        "VOICE"
                     ]
                 },
                 {
@@ -584,39 +441,43 @@
                     ]
                 },
                 {
-                    "text": "Is {WORD} imperfective?",
+                    "text": "Is {WORD} {ASPECT}?",
+                    "slots": [
+                        "WORD",
+                        "ASPECT"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the aspect of {ASPECT}?",
+                    "slots": [
+                        "WORD",
+                        "ASPECT"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} imperfective, perfective, or perfect?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "Is {WORD} perfective?",
+                    "text": "Is {WORD} in the {ASPECT}?",
+                    "slots": [
+                        "WORD",
+                        "ASPECT"
+                    ]
+                },
+                {
+                    "text": "Identify the aspect of {WORD}.",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "Is {WORD} perfect?",
+                    "text": "Is {WORD} in the {ASPECT} aspect?",
                     "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the imperfective?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the perfective?",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "Is {WORD} in the perfect?",
-                    "slots": [
-                        "WORD"
+                        "WORD",
+                        "ASPECT"
                     ]
                 }
             ]
