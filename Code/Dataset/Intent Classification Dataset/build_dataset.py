@@ -11,6 +11,10 @@ debug = False
 
 def filter_by_labels(df: pd.DataFrame, labels: list) -> pd.DataFrame:
     '''
+    Filter the dataframe to only rows that have all the specified labels filled in (not NaN).
+
+    Filters the dataframe to the subset that contains only words
+    that are valid for the target labels of the intent being asked about.
     '''
     mask = df[labels].notna().all(axis=1)
     return df[mask]
@@ -18,6 +22,7 @@ def filter_by_labels(df: pd.DataFrame, labels: list) -> pd.DataFrame:
 
 def sample_words(df: pd.DataFrame, n: int = 5000) -> pd.DataFrame:
     '''
+    Sample n random rows from the dataframe. If the dataframe has fewer than n rows, return it as-is.
     '''
     if len(df) > n:
         return df.sample(n, random_state=42)
@@ -237,7 +242,7 @@ def build_dataset(templates_path: str, data_path: str, n: int = 1000) -> pd.Data
 
 if __name__ == "__main__":
     dataset = build_dataset(
-        templates_path="question_templates_test.json",  # TODO: update with actual path, currently test templates
+        templates_path="question_templates.json",
         data_path="words_data_test_2.csv",              # TODO: update with actual path, currently test dataset
         # n=1000
         n=5 if debug else 5000
