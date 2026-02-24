@@ -1,0 +1,1008 @@
+{
+    "placeholders": {
+        "WORD": "",
+        "PART_OF_SPEECH": [
+            "noun",
+            "verb",
+            "adjective",
+            "participle",
+            "proper name"
+        ],
+        "PERSON": [
+            ""
+        ],
+        "MOOD": [
+            "indicative",
+            "subjunctive",
+            "imperative"
+        ],
+        "TENSE": [
+            "present",
+            "past",
+            "future"
+        ],
+        "VOICE": [
+            "active",
+            "passive"
+        ],
+        "ASPECT": [
+            "imperfective",
+            "perfective",
+            "perfect"
+        ],
+        "NUMBER": [
+            "singular",
+            "plural"
+        ],
+        "CASE": [
+            "nominative",
+            "accusative",
+            "genitive",
+            "dative",
+            "ablative",
+            "vocative"
+        ],
+        "GENDER": [
+            "masculine",
+            "feminine",
+            "neuter"
+        ],
+        "DECLENSION": [
+            "1st declension",
+            "2nd declension",
+            "3rd declension",
+            "4th declension",
+            "5th declension"
+        ],
+        "CONJUGATION": [
+            "1st conjugation",
+            "2nd conjugation",
+            "3rd conjugation",
+            "4th conjugation"
+        ]
+    },
+    "intents": {
+        "part_of_speech": {
+            "target_labels": [
+                "part_of_speech"
+            ],
+            "templates": [
+                {
+                    "text": "What part of speech is {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What POS is {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What part of speech is the word {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What POS is the word {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} a noun?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} a verb?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} an adjective?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} a participle?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} a verb form?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} function as an adjective?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} function as a participle?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "POS for {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Part of speech for {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What is the part of speech of {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What is the POS of {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                }
+            ]
+        },
+        "person": {
+            "target_labels": [
+                "person",
+                "number"
+            ],
+            "templates": [
+                {
+                    "text": "Which person is {WORD}: 1st, 2nd, or 3rd?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "{WORD} - person and number?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Identify the person of {WORD}.",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What is the person of {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What is the person and number of {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 1st person?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 2nd person?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 3rd person?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 1st, 2nd, or 3rd person?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Which person and number are {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 1st person singular?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 1st person plural?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 2nd person singular?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 2nd person plural?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 3rd person singular?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 3rd person plural?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Which person is {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Identify the person and number of {WORD}.",
+                    "slots": [
+                        "WORD"
+                    ]
+                }
+            ]
+        },
+        "mood": {
+            "target_labels": [
+                "mood"
+            ],
+            "templates": [
+                {
+                    "text": "What mood is {WORD} (indicative/subjunctive/imperative)?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} subjunctive?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} imperative?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} indicative?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the imperative mood?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the subjunctive mood?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the indicative mood?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the imperative?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the subjunctive?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the indicative?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What mood is {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What is the mood of {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What mood is {WORD}: imperative, indicative, or subjunctive?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Identify the mood of {WORD}.",
+                    "slots": [
+                        "WORD"
+                    ]
+                }
+            ]
+        },
+        "tense": {
+            "target_labels": [
+                "tense"
+            ],
+            "templates": [
+                {
+                    "text": "What tense is {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What is the tense of {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "In what tense is {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Identify the tense of {WORD}.",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} present tense?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} past tense?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} future tense?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} present?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} past?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} future?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the present tense?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the past tense?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the future tense?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the present?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the past?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the future?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What is the tense of {WORD}: present, past, or future?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "In what tense is {WORD}: past, present, or future?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the future, present, or past?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the present tense, past tense, or the future tense?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "{WORD} - past, present, or future?",
+                    "slots": [
+                        "WORD"
+                    ]
+                }
+            ]
+        },
+        "voice": {
+            "target_labels": [
+                "voice"
+            ],
+            "templates": [
+                {
+                    "text": "What voice is {WORD} (active or passive)?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} passive?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What is the voice of {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} passive or active?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} active?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the active voice?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the passive voice?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Which voice is the word {WORD} in?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "{WORD} - active or passive?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What voice is {WORD} in?",
+                    "slots": [
+                        "WORD"
+                    ]
+                }
+            ]
+        },
+        "aspect": {
+            "target_labels": [
+                "aspect"
+            ],
+            "templates": [
+                {
+                    "text": "What is the aspect of {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What aspect is {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} imperfective?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} perfective?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} perfect?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the imperfective?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the perfective?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the perfect?",
+                    "slots": [
+                        "WORD"
+                    ]
+                }
+            ]
+        },
+        "number": {
+            "target_labels": [
+                "number"
+            ],
+            "templates": [
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                }
+            ]
+        },
+        "case": {
+            "target_labels": [
+                "case"
+            ],
+            "templates": [
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                }
+            ]
+        },
+        "gender": {
+            "target_labels": [
+                "gender"
+            ],
+            "templates": [
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                }
+            ]
+        },
+        "declension": {
+            "target_labels": [
+                "declension"
+            ],
+            "templates": [
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                }
+            ]
+        },
+        "conjugation": {
+            "target_labels": [
+                "conjugation"
+            ],
+            "templates": [
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "",
+                    "slots": [
+                        "WORD"
+                    ]
+                }
+            ]
+        }
+    }
+}
