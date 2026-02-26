@@ -500,7 +500,7 @@ if __name__ == "__main__":
 
 
     # save dataframe to file
-    df.to_csv("/home/amys/words/words_data_test_2.csv", index=False)
+    df.to_csv("/home/amys/words/words_data.csv", index=False)
 
 
     # close words program

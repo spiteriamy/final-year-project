@@ -243,7 +243,7 @@ def build_dataset(templates_path: str, data_path: str, n: int = 1000) -> pd.Data
 if __name__ == "__main__":
     dataset = build_dataset(
         templates_path="question_templates.json",
-        data_path="words_data_test_2.csv",              # TODO: update with actual path, currently test dataset
+        data_path="words_data.csv",
         # n=1000
         n=5 if debug else 5000
     )

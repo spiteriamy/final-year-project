@@ -27,7 +27,7 @@ df["lang_specific"] = df["features"].str.extract(r'\b(LGSPEC1)\b') # supine
 sample_df = pd.DataFrame()
 
 for pos in ["ADJ", "V", "N", "PROPN", "V\.PTCP", "V\+V\.PTCP", "V\.MSDR", "V\+V\.MSDR"]:
-    pos_df = df[df['part_of_speech'].str.fullmatch(pos)].head(15)  # take first 15 examples of each POS
+    pos_df = df[df['part_of_speech'].str.fullmatch(pos)].head(1000)  # take first 500 examples of each POS
     sample_df = pd.concat([sample_df, pos_df])
 
 
