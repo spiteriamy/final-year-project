@@ -51,17 +51,17 @@
             "neuter"
         ],
         "DECLENSION": [
-            "",
-            "",
-            "",
-            "",
-            ""
+            "first",
+            "second",
+            "third",
+            "fourth",
+            "fifth"
         ],
         "CONJUGATION": [
-            "",
-            "",
-            "",
-            ""
+            "first",
+            "second",
+            "third",
+            "fourth"
         ]
     },
     "intents": {
@@ -488,109 +488,82 @@
             ],
             "templates": [
                 {
-                    "text": "",
+                    "text": "What number is {WORD}?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Is {WORD} singular or plural?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Identify the number of {WORD}.",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "What is the grammatical number of {WORD}?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "{WORD} - singular or plural?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Is {WORD} in the {NUMBER}?",
+                    "slots": [
+                        "WORD",
+                        "NUMBER"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} {NUMBER}?",
+                    "slots": [
+                        "WORD",
+                        "NUMBER"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the {NUMBER} form?",
+                    "slots": [
+                        "WORD",
+                        "NUMBER"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} refer to one or more?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Is {WORD} one or many?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Which number is {WORD}?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "What is the number of {WORD}?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
+                    "text": "Is {WORD} in the singular or plural form?",
                     "slots": [
                         "WORD"
                     ]
@@ -603,109 +576,83 @@
             ],
             "templates": [
                 {
-                    "text": "",
+                    "text": "What case is {WORD}?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Identify the case of {WORD}.",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Is {WORD} in the {CASE} case?",
+                    "slots": [
+                        "WORD",
+                        "CASE"
+                    ]
+                },
+                {
+                    "text": "What grammatical case is {WORD}?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "In which case is {WORD}?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "{WORD} - which case?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Is {WORD} in the {CASE}?",
+                    "slots": [
+                        "WORD",
+                        "CASE"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} {CASE}?",
+                    "slots": [
+                        "WORD",
+                        "CASE"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} appear in the {CASE}?",
+                    "slots": [
+                        "WORD",
+                        "CASE"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} nominative, accusative, genitive, dative, ablative, vocative, or locative?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Which case does {WORD} use?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "What case does {WORD} show?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
+                    "text": "What is the case of {WORD}?",
                     "slots": [
                         "WORD"
                     ]
@@ -718,109 +665,89 @@
             ],
             "templates": [
                 {
-                    "text": "",
+                    "text": "What gender is {WORD}?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Is {WORD} masculine, feminine, or neuter?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "What is the gender of {WORD}?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "{WORD} - which gender?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "What is the grammatical gender of {WORD}?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Identify the gender of {WORD}.",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "What grammatical gender is {WORD}?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "{WORD} - masculine, feminine, or neuter?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Is {WORD} {GENDER}?",
+                    "slots": [
+                        "WORD",
+                        "GENDER"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the {GENDER}?",
+                    "slots": [
+                        "WORD",
+                        "GENDER"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the {GENDER} gender?",
+                    "slots": [
+                        "WORD",
+                        "GENDER"
+                    ]
+                },
+                {
+                    "text": "Is the gender of {WORD} {GENDER}?",
+                    "slots": [
+                        "WORD",
+                        "GENDER"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} have masculine, feminine, or neuter gender?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
-                    "slots": [
-                        "WORD"
-                    ]
-                },
-                {
-                    "text": "",
+                    "text": "Which gender does {WORD} belong to?",
                     "slots": [
                         "WORD"
                     ]
@@ -833,13 +760,171 @@
             ],
             "templates": [
                 {
-                    "text": "",
+                    "text": "What declension is {WORD}?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Identify the declension of {WORD}.",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Which declension does {WORD} belong to?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What is the declension of {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "{WORD} - which declension?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the {DECLENSION} declension?",
+                    "slots": [
+                        "WORD",
+                        "DECLENSION"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 1st declension?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 2nd declension?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 3rd declension?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 4th declension?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 5th declension?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} follow the {DECLENSION} declension pattern?",
+                    "slots": [
+                        "WORD",
+                        "DECLENSION"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} follow the 1st declension pattern?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} follow the 2nd declension pattern?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} follow the 3rd declension pattern?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} follow the 4th declension pattern?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} follow the 5th declension pattern?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} first, second, third, fourth, or fifth declension?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} 1st, 2nd, 3rd, 4th, or 5th declension?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Which declension pattern does {WORD} follow?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the first, second, third, fourth, or fifth declension?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 1st, 2nd, 3rd, 4th, or 5th declension?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} declension 1?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} declension 2?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} declension 3?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} declension 4?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} declension 5?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "How is {WORD} declined?",
                     "slots": [
                         "WORD"
                     ]
@@ -852,13 +937,129 @@
             ],
             "templates": [
                 {
-                    "text": "",
+                    "text": "What conjugation is {WORD}?",
                     "slots": [
                         "WORD"
                     ]
                 },
                 {
-                    "text": "",
+                    "text": "Identify the conjugation of {WORD}.",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Which conjugation does {WORD} belong to?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "{WORD} - which conjugation?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What is the conjugation of {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the {CONJUGATION} conjugation?",
+                    "slots": [
+                        "WORD",
+                        "CONJUGATION"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 1st conjugation?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 2nd conjugation?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 3rd conjugation?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} in the 4th conjugation?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} follow the {CONJUGATION} conjugation pattern?",
+                    "slots": [
+                        "WORD",
+                        "CONJUGATION"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} follow the 1st conjugation pattern?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} follow the 2nd conjugation pattern?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} follow the 3rd conjugation pattern?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Does {WORD} follow the 4th conjugation pattern?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} first, second, third, or fourth conjugation?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Is {WORD} 1st, 2nd, 3rd, or 4th conjugation?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Which conjugation pattern does {WORD} follow?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "What is the conjugation pattern of {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "Conjugation of {WORD}?",
+                    "slots": [
+                        "WORD"
+                    ]
+                },
+                {
+                    "text": "How is {WORD} conjugated?",
                     "slots": [
                         "WORD"
                     ]
