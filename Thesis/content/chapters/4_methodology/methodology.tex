@@ -6,6 +6,19 @@
 \section{System Overview}%
 \label{sec:system_overview}
 
+The overall architecture of the system consists of several components that work and interact together.
+The main components include an intent classification module, a response generation module, and a conversational interface.
+
+
+The user interacts with the system through the conversational interface by submitting a natural-language grammar question in English. 
+The chatbot takes input in English as the students' proficiency in Latin may still be too limited to ask questions in Latin.
+The user's input is processed by an intent classification model that identifies the grammatical category being asked about in the question.
+The Latin word is extracted from the question and the system retrieves the relevant grammatical information from the Latin grammar knowledge base or a morphological analysis model.
+A response is generated based on the identified intent and the retrieved grammatical information.
+The response may combine both English and Latin to provide more exposure to the Latin language and encourage more interaction in Latin.
+Finally, the chatbot returns the response to the user.
+
+
 \section{Dataset Creation}%
 \label{sec:dataset_creation}
 
