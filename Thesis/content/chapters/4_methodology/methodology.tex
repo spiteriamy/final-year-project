@@ -45,10 +45,22 @@ and also the list of templates.
 each template contains the text and the slots.
 the text is the actual question template with the placeholders, and the slots are the corresponding placeholders that need to be filled in to generate a complete question.
 
+\subsection{Morphological Analysis Dataset}
+\label{sec:morphological_analysis_dataset}
+
+2 morphological analysers were created, trained on 2 separate datasets.
+one trained on individual words and the other trained on sentences.
+the dataset for the word-level morphological analyser was the Latin Word Forms dataset mentioned previously, which contains individual Latin words along with their morphological features.
+for the sentence-level morphological analyser, existing Latin treebanks such as the PROIEL Treebank and the Perseus Latin Dependency Treebank were used, which contain annotated sentences with morphological information for each word.
+these datasets do not contain complete morphological analyses for each word.
+to address this, the missing morphological features were filled in automatically using existing tools, to create a more comprehensive dataset for training the morphological analyser.
 
 \section{Intent Classification Model}%
 \label{sec:intent_classification_model}
 
+a bert based model was created to classify the grammatical intent of user questions.
+the model was trained on the intent classification dataset created as described in section~\ref{sec:intent_classification_dataset}.
+the model takes as input a natural language question and outputs the predicted intent category.
 
 \section{Fine-tuning Latin BERT for Morphological Analysis}
 \label{sec:fine_tuning_latin_bert_for_morphological_analysis}
@@ -73,6 +85,9 @@ the text is the actual question template with the placeholders, and the slots ar
 % but current dataset is only single words
 % think about this more
 
+2 separate morphological analysers were created for this project, one trained on individual words and the other trained on sentences.
+the word-level and sentence-level morphological analysers were both fine-tuned on the Latin BERT model, which is a pre-trained language model specifically designed for the Latin language.
+the results of both morphological analysers were evaluated and compared to determine which approach is more effective for the task of morphological analysis in Latin.
 
 \section{Response Generation}
 \label{sec:response_generation}
