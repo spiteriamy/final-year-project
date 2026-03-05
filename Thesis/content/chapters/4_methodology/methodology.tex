@@ -55,6 +55,25 @@ the text is the actual question template with the placeholders, and the slots ar
 
 % train a separate classifier for each morphological feature (e.g., tense, person, number, etc.) using the Latin BERT model.
 
+% classifiers to be trained for the following morphological features
+% - part of speech
+% - tense
+% - person
+% - mood
+% - voice
+% - number
+% - case
+% - gender
+% - aspect
+% - declension
+% - conjugation
+
+% classifying a single word vs sequence labelling for a sentence
+% single word may be more ambiguous, can have multiple analyses
+% but current dataset is only single words
+% think about this more
+
+
 \section{Response Generation}
 \label{sec:response_generation}
 
