@@ -25,6 +25,12 @@ Finally, the chatbot returns the response to the user.
 \subsection{Latin Words Dataset}
 \label{sec:latin_words_dataset}
 
+% A dataset of Latin words and their grammatical features
+% will be created by using the UniMorph dataset as the
+% base dataset and using the Whitaker’s Words program
+% to fill in and add additional grammar information to the
+% entries.
+
 \subsection{Intent Classification Dataset}
 \label{sec:intent_classification_dataset}
 
@@ -48,9 +54,12 @@ the text is the actual question template with the placeholders, and the slots ar
 \subsection{Morphological Analysis Dataset}
 \label{sec:morphological_analysis_dataset}
 
-2 morphological analysers were created, trained on 2 separate datasets.
-one trained on individual words and the other trained on sentences.
-the dataset for the word-level morphological analyser was the Latin Word Forms dataset mentioned previously, which contains individual Latin words along with their morphological features.
+As explained in section~\ref{sec:fine_tuning_latin_bert_for_morphological_analysis}, two separate morphological analysers were created for this project, one trained on individual words and the other trained on sentences, and thus two separate datasets were used for training these morphological analysers.
+The dataset used for training the word-level morphological analyser was the Latin Word Forms dataset discussed in section~\ref{sec:latin_words_dataset}, which contains individual Latin words along with their morphological features.
+
+% 2 morphological analysers were created, trained on 2 separate datasets.
+% one trained on individual words and the other trained on sentences.
+% the dataset for the word-level morphological analyser was the Latin Word Forms dataset mentioned previously, which contains individual Latin words along with their morphological features.
 for the sentence-level morphological analyser, existing Latin treebanks such as the PROIEL Treebank and the Perseus Latin Dependency Treebank were used, which contain annotated sentences with morphological information for each word.
 these datasets do not contain complete morphological analyses for each word.
 to address this, the missing morphological features were filled in automatically using existing tools, to create a more comprehensive dataset for training the morphological analyser.
@@ -61,6 +70,8 @@ to address this, the missing morphological features were filled in automatically
 a bert based model was created to classify the grammatical intent of user questions.
 the model was trained on the intent classification dataset created as described in section~\ref{sec:intent_classification_dataset}.
 the model takes as input a natural language question and outputs the predicted intent category.
+
+The model is fine-tuned using the dataset mentioned in section~\ref{sec:intent_classification_dataset}.
 
 \section{Fine-tuning Latin BERT for Morphological Analysis}
 \label{sec:fine_tuning_latin_bert_for_morphological_analysis}
@@ -92,5 +103,13 @@ the results of both morphological analysers were evaluated and compared to deter
 \section{Response Generation}
 \label{sec:response_generation}
 
+template-based response generation
+
 \section{Conversational Interface Design}
 \label{sec:conversational_interface_design}
+
+\subsection{Command Line Interface}
+\label{subsec:command_line_interface}
+
+\subsection{Web-based Interface}
+\label{subsec:web_based_interface}
