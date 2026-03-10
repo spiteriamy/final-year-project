@@ -34,6 +34,7 @@ to supplement missing information in the unimorph latin dataset.
 # GEN+DAT                 = in words, separate records with GEN and DAT
 
 import os
+import multiprocessing as mp
 import pandas as pd
 # from words import Words
 from words_new import Words
@@ -44,14 +45,21 @@ debug = True
 
 tqdm.pandas()
 
-def safe_analyze(word):
-    """Wrapper to avoid crashes inside w.analyze()."""
-    try:
-        return w.analyze(word)
-    except Exception as e:
-        print(f"Error analyzing {word}: {e}")
-        return []
+# multiprocessing worker initializer
 
+def _init_worker():
+    """Initialise a Words instance per worker process."""
+    global w
+    w = Words()
+
+def _worker_analyze(form):
+    """Analyze a single form; return (form, result) tuple."""
+    try:
+        return form, w.analyze(form)
+    except Exception as e:
+        print(f"Error analyzing {form}: {e}")
+        return form, []
+    
 
 def check(form_info: list[dict], df_row: pd.Series) -> dict:
     """
@@ -469,8 +477,10 @@ if __name__ == "__main__":
     print(df.head())
 
 
-    # make instance of words
-    w = Words()
+    # only analyze each unique form once
+    unique_forms = df["form"].unique().tolist()
+    print(f"Total rows: {len(df):,}  |  Unique forms: {len(unique_forms):,}")
+
 
     # use words program to add conjugation and
     # declension info for each word in the dataset
@@ -480,8 +490,23 @@ if __name__ == "__main__":
 
     # analyze dataset with Whitaker's Words
     # creates new column "analysis" with the full analysis result for each word
-    # df["analysis"] = df["form"].apply(safe_analyze)
-    df["analysis"] = df["form"].progress_apply(safe_analyze)
+
+
+    # parallel analysis with multiprocessing
+    N_WORKERS = mp.cpu_count()
+    print(f"Launching {N_WORKERS} worker processes...")
+
+    with mp.Pool(processes=N_WORKERS, initializer=_init_worker) as pool:
+        results = list(tqdm(
+            pool.imap(_worker_analyze, unique_forms, chunksize=100),
+            total=len(unique_forms)
+        ))
+
+    # map results back to full dataframe
+    # build lookup dict: form -> analysis result
+    analysis_map = {form: result for form, result in results}
+    df["analysis"] = df["form"].map(analysis_map)
+
 
     # extract new columns info:
 
@@ -509,8 +534,6 @@ if __name__ == "__main__":
 
     # save dataframe to file
     df.to_csv("/home/amys/words/words_data.csv", index=False)
+    print("Saved to words_data.csv")
 
-
-    # close words program
-    w.close()
-
+    
