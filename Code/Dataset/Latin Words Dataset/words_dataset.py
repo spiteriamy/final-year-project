@@ -35,11 +35,14 @@ to supplement missing information in the unimorph latin dataset.
 
 import os
 import pandas as pd
-from words import Words
+# from words import Words
+from words_new import Words
+from tqdm import tqdm
 
 
-debug = False
+debug = True
 
+tqdm.pandas()
 
 def safe_analyze(word):
     """Wrapper to avoid crashes inside w.analyze()."""
@@ -438,29 +441,32 @@ def extract_info(entries, row: pd.Series) -> dict:
 
 
 if __name__ == "__main__":
-    # # Load unimorph data
-    # self.df = pd.read_csv("/home/amys/words/lat/lat", sep="\t", names=["lemma", "form", "features"])
-
-    # # Extract features in unimorph data
-    # # create new columns for each feature by extracting from the "features" column
-
-    # self.df["part_of_speech"] = self.df["features"].str.findall(r'\b(V\.PTCP|V\.MSDR|ADJ|PROPN|N|V)\b').apply(lambda x: '+'.join(x)) # joins multiple pos tags into 1 combined tag with +
-    # self.df["gender"] = self.df["features"].str.extract(r'\b(MASC\+FEM\+NEUT|MASC\+FEM|MASC\+NEUT|FEM\+NEUT|MASC|FEM|NEUT)\b')
-    # self.df["case"] = self.df["features"].str.extract(r'\b(GEN\+DAT|NOM|ACC|GEN|DAT|ABL|VOC|LOC)\b')
-    # self.df["number"] = self.df["features"].str.extract(r'\b(SG|PL)\b')
-    # self.df["tense"] = self.df["features"].str.extract(r'\b(PRS|FUT|PST)\b')
-    # self.df["voice"] = self.df["features"].str.extract(r'\b(ACT|PASS)\b')
-    # self.df["mood"] = self.df["features"].str.extract(r'\b(IND|SBJV|IMP)\b')
-    # self.df["person"] = self.df["features"].str.extract(r'\b(1|2|3)\b')
-    # self.df["aspect"] = self.df["features"].str.extract(r'\b(IPFV|PFV|PRF)\b')
-    # self.df["finiteness"] = self.df["features"].str.extract(r'\b(NFIN)\b')
-    # self.df["lang_specific"] = self.df["features"].str.extract(r'\b(LGSPEC1)\b') # supine
-
-    # load sample data for testing
-    df = pd.read_csv("/home/amys/words/sample_data.csv", dtype=str)
 
     if debug:
-        print(df.head())
+        # load sample data for testing
+        df = pd.read_csv("/home/amys/words/sample_data.csv", dtype=str)
+
+    else:
+        # Load unimorph data
+        df = pd.read_csv("/home/amys/words/lat/lat", sep="\t", names=["lemma", "form", "features"])
+
+        # Extract features in unimorph data
+        # create new columns for each feature by extracting from the "features" column
+
+        df["part_of_speech"] = df["features"].str.findall(r'\b(V\.PTCP|V\.MSDR|ADJ|PROPN|N|V)\b').apply(lambda x: '+'.join(x)) # joins multiple pos tags into 1 combined tag with +
+        df["gender"] = df["features"].str.extract(r'\b(MASC\+FEM\+NEUT|MASC\+FEM|MASC\+NEUT|FEM\+NEUT|MASC|FEM|NEUT)\b')
+        df["case"] = df["features"].str.extract(r'\b(GEN\+DAT|NOM|ACC|GEN|DAT|ABL|VOC|LOC)\b')
+        df["number"] = df["features"].str.extract(r'\b(SG|PL)\b')
+        df["tense"] = df["features"].str.extract(r'\b(PRS|FUT|PST)\b')
+        df["voice"] = df["features"].str.extract(r'\b(ACT|PASS)\b')
+        df["mood"] = df["features"].str.extract(r'\b(IND|SBJV|IMP)\b')
+        df["person"] = df["features"].str.extract(r'\b(1|2|3)\b')
+        df["aspect"] = df["features"].str.extract(r'\b(IPFV|PFV|PRF)\b')
+        df["finiteness"] = df["features"].str.extract(r'\b(NFIN)\b')
+        df["lang_specific"] = df["features"].str.extract(r'\b(LGSPEC1)\b') # supine
+
+    
+    print(df.head())
 
 
     # make instance of words
@@ -474,7 +480,8 @@ if __name__ == "__main__":
 
     # analyze dataset with Whitaker's Words
     # creates new column "analysis" with the full analysis result for each word
-    df["analysis"] = df["form"].apply(safe_analyze)
+    # df["analysis"] = df["form"].apply(safe_analyze)
+    df["analysis"] = df["form"].progress_apply(safe_analyze)
 
     # extract new columns info:
 
@@ -486,7 +493,8 @@ if __name__ == "__main__":
     # and the existing data from the unimorph dataset row
     # to create new fields for the dataframe.
 
-    df_extract = df.apply(lambda row: extract_info(row["analysis"], row), axis=1)
+    # df_extract = df.apply(lambda row: extract_info(row["analysis"], row), axis=1)
+    df_extract = df.progress_apply(lambda row: extract_info(row["analysis"], row), axis=1)
     df_extract = df_extract.apply(pd.Series)
 
     for col in df_extract.columns: # add new columns to df
