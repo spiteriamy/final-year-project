@@ -1,3 +1,5 @@
 pexpect
 
 pandas
+
+tqdm
