@@ -35,13 +35,14 @@ to supplement missing information in the unimorph latin dataset.
 
 import os
 import multiprocessing as mp
+import gc
 import pandas as pd
 # from words import Words
 from words_new import Words
 from tqdm import tqdm
 
 
-debug = True
+debug = False
 
 tqdm.pandas()
 
@@ -505,8 +506,9 @@ if __name__ == "__main__":
     # map results back to full dataframe
     # build lookup dict: form -> analysis result
     analysis_map = {form: result for form, result in results}
-    df["analysis"] = df["form"].map(analysis_map)
 
+    del results # free memory
+    gc.collect() # force garbage collection
 
     # extract new columns info:
 
@@ -518,18 +520,32 @@ if __name__ == "__main__":
     # and the existing data from the unimorph dataset row
     # to create new fields for the dataframe.
 
-    # df_extract = df.apply(lambda row: extract_info(row["analysis"], row), axis=1)
-    df_extract = df.progress_apply(lambda row: extract_info(row["analysis"], row), axis=1)
-    df_extract = df_extract.apply(pd.Series)
+    results_list = df.progress_apply(
+        lambda row: extract_info(analysis_map.get(row["form"], []), row),
+        axis=1
+    ).tolist()
 
-    for col in df_extract.columns: # add new columns to df
+    del analysis_map # free memory
+    gc.collect() # force garbage collection
+
+
+    # Extract columns one at a time from results_list.
+    # This avoids apply(pd.Series) which expands all dicts into a full
+    # DataFrame at once, causing a large memory spike.
+    new_cols      = ["conjugation", "declension", "degree", "participle_type", "comment"]
+    fillable_cols = ["case", "number", "gender", "person", "tense", "aspect", "voice", "mood"]
+
+    for col in tqdm(new_cols + fillable_cols):
+        col_data = [r.get(col) for r in results_list]
         if col not in df.columns:
-            df[col] = df_extract[col]
+            df[col] = col_data
+        else:
+            # only fill rows where unimorph is missing a value
+            ser = pd.Series(col_data, index=df.index, dtype=object)
+            df[col] = df[col].fillna(ser)
 
-    df.update(df_extract, overwrite=False) # update existing columns in df with new info
-
-    # drop analysis column
-    df = df.drop('analysis', axis=1)
+    del results_list
+    gc.collect()
 
 
     # save dataframe to file
