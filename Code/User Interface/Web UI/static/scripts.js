@@ -47,11 +47,11 @@ function updateChatTitle(firstMessage) {
 function deleteChat(chatId) {
   // Remove messages
   localStorage.removeItem(`chat_${chatId}`);
- 
+
   // Remove from chats list
   const chats = getAllChats().filter(c => c.id !== chatId);
   saveAllChats(chats);
- 
+
   // If deleting the active chat, navigate to the next available one (or fresh page)
   if (chatId === currentChatId) {
     if (chats.length > 0) {
@@ -67,21 +67,20 @@ function deleteChat(chatId) {
 function renderSidebarChats() {
   const listEl = document.getElementById('chat-list');
   if (!listEl) return;
- 
+
   const chats = getAllChats();
- 
+
   if (chats.length === 0) {
     listEl.innerHTML = `<p class="px-3 py-2 text-[11px] text-outline italic">No conversations yet.</p>`;
     return;
   }
- 
+
   listEl.innerHTML = chats.map(chat => {
     const isActive = chat.id === currentChatId;
     return `
-      <div class="chat-list-item relative flex items-center rounded-md transition-colors group/item ${
-        isActive
-          ? 'text-zinc-100 dark:text-[#c6c6c7] font-semibold bg-zinc-800 dark:bg-[#19191d]'
-          : 'text-zinc-500 dark:text-[#47474e] hover:bg-zinc-800/50 dark:hover:bg-[#19191d]/50'
+      <div class="chat-list-item relative flex items-center rounded-md transition-colors group/item ${isActive
+        ? 'text-zinc-100 dark:text-[#c6c6c7] font-semibold bg-zinc-800 dark:bg-[#19191d]'
+        : 'text-zinc-500 dark:text-[#47474e] hover:bg-zinc-800/50 dark:hover:bg-[#19191d]/50'
       }">
         <a href="?chat=${chat.id}"
            class="flex items-center gap-3 px-3 py-2 flex-1 min-w-0"
@@ -97,7 +96,7 @@ function renderSidebarChats() {
         </button>
       </div>`;
   }).join('');
- 
+
   // Attach delete listeners
   listEl.querySelectorAll('.chat-delete-btn').forEach(btn => {
     btn.addEventListener('click', e => {
@@ -140,7 +139,10 @@ themeToggleBtn.addEventListener('click', () => {
 const sidebar = document.getElementById('sidebar');
 const collapseBtn = document.getElementById('collapse-sidebar');
 const expandBtn = document.getElementById('expand-sidebar');
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const mobileBackdrop = document.getElementById('mobile-drawer-backdrop');
 
+// Desktop collapse/expand
 collapseBtn.addEventListener('click', () => {
   sidebar.classList.add('collapsed');
   expandBtn.classList.remove('hidden');
@@ -151,10 +153,45 @@ expandBtn.addEventListener('click', () => {
   expandBtn.classList.add('hidden');
 });
 
+// Mobile drawer open/close
+function openMobileDrawer() {
+  sidebar.classList.add('mobile-open');
+  mobileBackdrop.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMobileDrawer() {
+  sidebar.classList.remove('mobile-open');
+  mobileBackdrop.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileDrawer);
+
+// Use both click and touchstart on backdrop for reliable mobile close
+if (mobileBackdrop) {
+  mobileBackdrop.addEventListener('click', closeMobileDrawer);
+  mobileBackdrop.addEventListener('touchstart', closeMobileDrawer, { passive: true });
+}
+
+// Close button inside the drawer (mobile only)
+const mobileDrawerClose = document.getElementById('mobile-drawer-close');
+if (mobileDrawerClose) {
+  mobileDrawerClose.addEventListener('click', closeMobileDrawer);
+  mobileDrawerClose.addEventListener('touchstart', closeMobileDrawer, { passive: true });
+}
+
+// Close drawer when a chat is selected on mobile
+document.addEventListener('click', e => {
+  const link = e.target.closest('#chat-list a');
+  if (link && window.innerWidth < 768) closeMobileDrawer();
+});
+
 // New Chat - create a fresh entry and open it in a new browser tab
 document.getElementById('new-chat-btn').addEventListener('click', () => {
   const newId = generateId();
-  window.open(`?chat=${newId}`, '_blank');
+  // window.open(`?chat=${newId}`, '_blank'); // open in new tab
+  window.open(`?chat=${newId}`, '_self'); // open in same tab
 });
 
 
@@ -164,6 +201,7 @@ document.getElementById('new-chat-btn').addEventListener('click', () => {
 const messagesEl = document.getElementById('messages');
 const inputEl = document.getElementById('message-input');
 const sendBtn = document.getElementById('send-btn');
+const chatScroll = document.getElementById('chat-scroll');
 
 // Helper: get current time
 function getTime() {
@@ -202,7 +240,7 @@ function addMessage(role, text) {
   }
 
   messagesEl.appendChild(wrapper);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
+  chatScroll.scrollTo({ top: chatScroll.scrollHeight, behavior: 'smooth' })
 
   saveMessages();
 
@@ -229,7 +267,7 @@ function addTyping() {
     </div>`;
 
   messagesEl.appendChild(wrapper);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
+  chatScroll.scrollTo({ top: chatScroll.scrollHeight, behavior: 'smooth' })
 
   return wrapper;
 }
@@ -240,11 +278,11 @@ let isFirstMessage = true;
 async function sendMessage() {
   const text = inputEl.value.trim();
   if (!text) return;
- 
+
   inputEl.value = '';
   inputEl.style.height = 'auto';
   sendBtn.disabled = true;
- 
+
   // Always register the chat (idempotent). On first message, also set the title.
   const isNew = ensureChatExists();
   if (isFirstMessage) {
@@ -254,10 +292,10 @@ async function sendMessage() {
     // Chat was saved before (e.g. welcome message) but never registered — sync sidebar now
     renderSidebarChats();
   }
- 
+
   addMessage('user', text);
   const typingRow = addTyping();
- 
+
   try {
     const res = await fetch('/chat', {
       method: 'POST',
@@ -313,79 +351,136 @@ function loadMessages() {
 
 // -----------------------------------------------------------------------------------------------
 // SHARE / EXPORT MODAL
- 
+
 function buildExportData() {
   const chats = getAllChats();
-  const meta  = chats.find(c => c.id === currentChatId);
- 
+  const meta = chats.find(c => c.id === currentChatId);
+
   // Parse messages out of the DOM
   const messages = [];
   messagesEl.querySelectorAll('.flex.justify-end.gap-6.group, .flex.gap-6.group').forEach(el => {
     const isUser = el.classList.contains('justify-end');
-    const role   = isUser ? 'user' : 'assistant';
+    const role = isUser ? 'user' : 'assistant';
     const textEl = el.querySelector('.text-on-surface.leading-relaxed');
     const timeEl = el.querySelector('.text-\\[10px\\].text-outline');
     if (textEl) {
       messages.push({
         role,
         content: textEl.textContent.trim(),
-        time:    timeEl ? timeEl.textContent.trim() : null,
+        time: timeEl ? timeEl.textContent.trim() : null,
       });
     }
   });
- 
+
   return {
-    id:         currentChatId,
-    title:      meta?.title ?? 'Untitled Chat',
-    createdAt:  meta?.createdAt ? new Date(meta.createdAt).toISOString() : null,
+    id: currentChatId,
+    title: meta?.title ?? 'Untitled Chat',
+    createdAt: meta?.createdAt ? new Date(meta.createdAt).toISOString() : null,
     exportedAt: new Date().toISOString(),
     messages,
   };
 }
- 
+
 function openShareModal() {
   const data = buildExportData();
- 
+
   // Populate preview fields
-  document.getElementById('export-chat-title').textContent   = data.title;
+  document.getElementById('export-chat-title').textContent = data.title;
   document.getElementById('export-message-count').textContent = `${data.messages.length} message${data.messages.length !== 1 ? 's' : ''}`;
   document.getElementById('export-date').textContent =
     data.createdAt ? new Date(data.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' }) : 'Unknown date';
- 
+
   document.getElementById('share-modal').classList.remove('hidden');
 }
- 
+
 function closeShareModal() {
   document.getElementById('share-modal').classList.add('hidden');
 }
- 
+
 function downloadJSON() {
-  const data     = buildExportData();
-  const json     = JSON.stringify(data, null, 2);
-  const blob     = new Blob([json], { type: 'application/json' });
-  const url      = URL.createObjectURL(blob);
+  const data = buildExportData();
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
   const filename = data.title.replace(/[^a-z0-9]/gi, '_').toLowerCase().substring(0, 40) + '.json';
- 
-  const a    = document.createElement('a');
-  a.href     = url;
+
+  const a = document.createElement('a');
+  a.href = url;
   a.download = filename;
   a.click();
   URL.revokeObjectURL(url);
- 
+
   closeShareModal();
 }
- 
+
 // Wire up share button (header)
 document.getElementById('share-btn').addEventListener('click', openShareModal);
- 
-document.getElementById('share-modal-close').addEventListener('click',    closeShareModal);
-document.getElementById('share-modal-cancel').addEventListener('click',   closeShareModal);
+
+document.getElementById('share-modal-close').addEventListener('click', closeShareModal);
+document.getElementById('share-modal-cancel').addEventListener('click', closeShareModal);
 document.getElementById('share-modal-download').addEventListener('click', downloadJSON);
-document.getElementById('share-backdrop').addEventListener('click',       closeShareModal);
- 
+document.getElementById('share-backdrop').addEventListener('click', closeShareModal);
+
 // Close on Escape key
+// document.addEventListener('keydown', e => {
+//   if (e.key === 'Escape') closeShareModal();
+// });
+
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeShareModal();
+  if (e.key === 'Escape') {
+    closeShareModal();
+    moreMenu.classList.add('hidden');
+  }
+});
+
+
+
+// -----------------------------------------------------------------------------------------------
+// MORE OPTIONS MENU
+
+const moreBtn = document.getElementById('more-btn');
+const moreMenu = document.getElementById('more-menu');
+
+moreBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  moreMenu.classList.toggle('hidden');
+});
+
+// Close menu when clicking anywhere else
+document.addEventListener('click', () => {
+  moreMenu.classList.add('hidden');
+});
+
+// Prevent clicks inside menu from closing it prematurely
+moreMenu.addEventListener('click', (e) => {
+  e.stopPropagation();
+});
+
+// Rename chat
+document.getElementById('menu-rename').addEventListener('click', () => {
+  moreMenu.classList.add('hidden');
+
+  const chats = getAllChats();
+  const chat = chats.find(c => c.id === currentChatId);
+  const currentTitle = chat ? chat.title : 'New Chat';
+
+  const newTitle = prompt('Rename this chat:', currentTitle);
+  if (newTitle !== null && newTitle.trim() !== '') {
+    chat.title = newTitle.trim();
+    saveAllChats(chats);
+    renderSidebarChats();
+  }
+});
+
+// Delete chat
+document.getElementById('menu-delete').addEventListener('click', () => {
+  moreMenu.classList.add('hidden');
+
+  const chat = getAllChats().find(c => c.id === currentChatId);
+  const label = chat ? `"${chat.title}"` : 'this chat';
+  if (confirm(`Delete ${label}? This cannot be undone.`)) {
+    deleteChat(currentChatId);
+  }
 });
 
 
@@ -395,14 +490,21 @@ document.addEventListener('keydown', e => {
 window.addEventListener('load', () => {
   // Sync icon to the theme that was applied by the inline script
   themeIcon.textContent = htmlElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
- 
+
   renderSidebarChats();
- 
+
   const hasMessages = loadMessages();
   if (hasMessages) {
     // Existing chat - first message already sent previously
     isFirstMessage = false;
+
+    // Scroll to bottom to show latest message
+    requestAnimationFrame(() => {
+      const chatScroll = document.getElementById('chat-scroll');
+      chatScroll.scrollTo({ top: chatScroll.scrollHeight, behavior: 'smooth' })
+    });
   } else {
     addMessage('bot', "Welcome. Ask me something about Latin grammar.");
   }
 });
+

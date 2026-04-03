@@ -223,3 +223,73 @@ html:not(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
     padding-left: 0;
     padding-right: 0;
 }
+/* ============================================================
+   MOBILE DRAWER
+   ============================================================ */
+
+/* On mobile: sidebar is a fixed off-screen drawer */
+@media (max-width: 767px) {
+    #sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100dvh;
+        z-index: 80;
+        width: 280px !important;
+        min-width: 280px !important;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    #sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    /* Never apply collapsed shrinking on mobile */
+    #sidebar.collapsed {
+        width: 280px !important;
+        min-width: 280px !important;
+        transform: translateX(-100%);
+    }
+
+    #sidebar.collapsed.mobile-open {
+        transform: translateX(0);
+    }
+}
+
+/* Desktop: sidebar is a normal sticky flex column */
+@media (min-width: 768px) {
+    #sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        transform: none !important;
+    }
+}
+
+/* Mobile backdrop */
+#mobile-drawer-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    z-index: 79;
+}
+
+#mobile-drawer-backdrop.active {
+    display: block;
+}
+
+html:not(.dark) #mobile-drawer-backdrop {
+    background: rgba(0, 0, 0, 0.35);
+}
+/* Composer footer — stack vertically on mobile */
+@media (max-width: 767px) {
+    #composer-footer {
+        font-size: 8px;
+        letter-spacing: 0.1em;
+        gap: 0.25rem;
+        flex-direction: column;
+    }
+}

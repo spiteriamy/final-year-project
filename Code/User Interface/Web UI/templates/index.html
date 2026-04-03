@@ -105,13 +105,18 @@
 
 		<!-- SideNavBar Component -->
 		<aside
-			class="hidden md:flex flex-col h-full sticky left-0 top-0 bg-zinc-900/50 dark:bg-[#131316] h-screen w-64 border-r-0 font-manrope text-sm tracking-tight transition-all duration-300 ease-in-out"
+			class="flex flex-col h-full bg-zinc-900/50 dark:bg-[#131316] w-64 border-r-0 font-manrope text-sm tracking-tight transition-all duration-300 ease-in-out"
 			id="sidebar">
 
 			<!-- Header Section -->
 			<div class="p-6 flex flex-col flex-1 min-h-0">
-				<div class="flex justify-end mb-4">
-					<button class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400 group"
+				<div class="flex justify-between items-center mb-4">
+					<!-- Close button — mobile only -->
+					<button id="mobile-drawer-close" class="md:hidden p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
+						<span class="material-symbols-outlined">close</span>
+					</button>
+					<!-- Collapse button — desktop only -->
+					<button class="hidden md:flex p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400 group ml-auto"
 						id="collapse-sidebar">
 						<span class="material-symbols-outlined transition-transform group-hover:-translate-x-0.5"
 							data-icon="chevron_left">chevron_left</span>
@@ -159,7 +164,8 @@
 			</div>
 
 			<!-- Footer Section -->
-			<div class="p-6 pt-0">
+			<!-- profile button -->
+			<!-- <div class="p-6 pt-0">
 				<div
 					class="flex items-center gap-3 px-3 py-2 text-zinc-500 dark:text-[#47474e] hover:bg-zinc-800/50 dark:hover:bg-[#19191d]/50 transition-colors rounded-md cursor-pointer">
 					<img alt="User profile" class="w-6 h-6 rounded-full object-cover"
@@ -167,7 +173,7 @@
 					<span class="font-medium">Profile</span>
 					<span class="material-symbols-outlined ml-auto text-sm" data-icon="more_horiz">more_horiz</span>
 				</div>
-			</div>
+			</div> -->
 
 		</aside>
 
@@ -178,30 +184,48 @@
 			<header class="flex justify-between items-center px-6 h-16 w-full max-w-none docked full-width top-0 z-50 bg-zinc-950/60 dark:bg-[#0e0e10]/60 backdrop-blur-md font-manrope font-medium">
 
 				<div class="flex items-center gap-4">
-					<span class="md:hidden material-symbols-outlined text-zinc-100" data-icon="menu">menu</span>
-					<button class="hidden p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400 mr-2" id="expand-sidebar">
-						<span class="material-symbols-outlined" data-icon="menu">menu</span>
+					<button id="mobile-menu-btn" class="md:hidden p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
+						<span class="material-symbols-outlined" style="font-size:22px; display:block;">menu</span>
+					</button>
+					<button class="hidden p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400" id="expand-sidebar">
+						<span class="material-symbols-outlined" style="font-size:22px; display:block;">menu</span>
 					</button>
 					<span class="text-xl font-bold tracking-tight dark:text-[#c6c6c7]">Talk2MeLatin</span>
 				</div>
 
 				<div class="flex items-center gap-4">
 					<!-- Light/Dark Theme Toggle -->
-					<button class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400 mr-1" id="theme-toggle">
-						<span class="material-symbols-outlined" id="theme-icon">light_mode</span>
+					<button class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400" id="theme-toggle">
+						<span class="material-symbols-outlined" style="font-size:22px; display:block;" id="theme-icon">light_mode</span>
 					</button>
 
 					<!-- Share Button -->
 					<button id="share-btn"
-						class="flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-surface-variant transition-colors text-sm text-zinc-400">
-						<span class="material-symbols-outlined text-sm" data-icon="share">share</span>
-						<span class="hidden sm:inline">Share</span>
+						class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400 flex items-end gap-1.5">
+						<span class="material-symbols-outlined" style="font-size:22px; display:block;">share</span>
+						<!-- <span class="hidden sm:inline text-sm font-medium pb-[1px]">Share</span> -->
 					</button>
 
 					<!-- More Options Button -->
-					<button class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
-						<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
-					</button>
+					<!-- <button class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
+						<span class="material-symbols-outlined" style="font-size:22px; display:block;">more_vert</span>
+					</button> -->
+					<div class="relative">
+						<button id="more-btn" class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
+							<span class="material-symbols-outlined" style="font-size:22px; display:block;">more_vert</span>
+						</button>
+						<!-- Dropdown menu -->
+						<div id="more-menu" class="hidden absolute right-0 top-full mt-2 w-48 bg-surface-container-high rounded-lg border border-surface-variant shadow-2xl overflow-hidden z-50">
+							<button id="menu-rename" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-on-surface hover:bg-surface-variant transition-colors">
+								<span class="material-symbols-outlined" style="font-size:18px">edit</span>
+								Rename
+							</button>
+							<button id="menu-delete" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-error hover:bg-surface-variant transition-colors">
+								<span class="material-symbols-outlined" style="font-size:18px">delete</span>
+								Delete
+							</button>
+						</div>
+					</div>
 				</div>
 
 			</header>
@@ -248,7 +272,7 @@
 					</div>
 
 					<!-- Text under textarea -->
-					<div class="mt-3 flex justify-center items-center gap-6 text-[10px] text-outline uppercase tracking-widest">
+					<div id="composer-footer" class="mt-3 flex justify-center items-center gap-6 text-[10px] text-outline uppercase tracking-widest">
 						<span class="flex items-center gap-1.5">
 							<span class="w-1 h-1 rounded-full bg-primary/50"></span>
 							B.Sc. IT (Hons.) Artificial Intelligence
@@ -264,6 +288,9 @@
 
 		</main>
 	</div>
+
+	<!-- Mobile drawer backdrop -->
+	<div id="mobile-drawer-backdrop"></div>
 
 	<!-- Share / Export Modal -->
 	<div id="share-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -316,39 +343,8 @@
 		</div>
 	</div>
 
-	<!-- BottomNavBar for Mobile -->
-	<nav
-		class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-zinc-950/60 backdrop-blur-md flex items-center justify-around z-50">
-		<button class="flex flex-col items-center gap-1 text-primary" id="mobile-new-chat-btn">
-			<span class="material-symbols-outlined" data-icon="add" style="font-variation-settings: 'FILL' 1;">add</span>
-			<span class="text-[10px] font-bold">NEW</span>
-		</button>
-		<button class="flex flex-col items-center gap-1 text-zinc-500">
-			<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
-			<span class="text-[10px] font-bold">ARCHIVE</span>
-		</button>
-		<button class="flex flex-col items-center gap-1 text-zinc-500">
-			<span class="material-symbols-outlined" data-icon="settings">settings</span>
-			<span class="text-[10px] font-bold">SYSTEM</span>
-		</button>
-		<button class="flex flex-col items-center gap-1 text-zinc-500">
-			<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
-			<span class="text-[10px] font-bold">ME</span>
-		</button>
-	</nav>
-
 	<!-- <script src="scripts.js"></script> -->
 	<script src="{{ url_for('static', filename='scripts.js') }}"></script>
-
-	<!-- Wire up mobile new-chat button after scripts load -->
-	<script>
-		const mobileNewChatBtn = document.getElementById('mobile-new-chat-btn');
-		if (mobileNewChatBtn) {
-			mobileNewChatBtn.addEventListener('click', () => {
-				document.getElementById('new-chat-btn').click();
-			});
-		}
-	</script>
 
 </body>
 
