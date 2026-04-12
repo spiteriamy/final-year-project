@@ -1,42 +1,208 @@
 from flask import Flask, request, jsonify, render_template
-import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+import os
+from models.inference import MorphologicalAnalyserService, IntentClassifierService
+import re
+from nltk.corpus import words
+import json
+
+import sqlite3
+from datetime import datetime
+from pathlib import Path
 
 app = Flask(__name__)
 
-# Load model & tokenizer once at startup
-MODEL_PATH = "intent_classifier"
-device = "cuda" if torch.cuda.is_available() else "cpu"
+# initialise database
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
-model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH).to(device)
-model.eval()  # set to inference mode
+DB_PATH = Path("survey_responses.db")
+
+
+def init_db():
+    with sqlite3.connect(DB_PATH) as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS responses (
+                id                    INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp             TEXT    NOT NULL,
+                latin_level           TEXT,
+                ai_familiarity        TEXT,
+                easy_to_use           INTEGER,
+                understood_questions  INTEGER,
+                answers_accurate      INTEGER,
+                answers_helpful       INTEGER,
+                would_recommend       INTEGER,
+                liked_most            TEXT,
+                improvements          TEXT,
+                errors                TEXT,
+                other                 TEXT
+            )
+        """)
+
+init_db()  # run once at import time
+
+
+
+# Load response templates once at startup
+with open("response_templates.json", "r", encoding="utf-8") as f:
+    RESPONSE_TEMPLATES = json.load(f)
+
+# Map intent labels -> morphology feature keys
+INTENT_TO_FEATURE = {
+    "part_of_speech": "pos",
+    "person": "person",
+    "mood":   "mood",
+    "tense":  "tense",
+    "voice":  "voice",
+    "number": "number",
+    "case":   "case",
+    "gender": "gender",
+    # aspect / declension / conjugation: not produced by the analyser yet
+}
+
+# Load models once at startup
+
+print("Loading models...")
+
+intent_classifier = IntentClassifierService(model_path=os.path.join("saved_models", "intent_classifier"))
+
+
+my_thresholds = {
+    "pos": 0.879,
+    "person": 0.969,
+    "number": 0.929,
+    "tense": 0.889,
+    "mood": 0.964,
+    "voice": 0.949 ,
+    "gender": 0.934 ,
+    "case": 0.959 ,
+    "degree": 0.873,
+}
+
+morphological_analyser = MorphologicalAnalyserService(
+    model_path=os.path.join("saved_models", "morphological_analyser"),
+    bert_path=os.path.join("saved_models", "latin_bert"),
+    thresholds=my_thresholds
+)
+
+
+ENGLISH_VOCAB = set(w.lower() for w in words.words())
+
+def tokenize(sentence: str) -> list[str]:
+    """Split on whitespace and remove punctuation."""
+    return re.findall(r"[A-Za-zÀ-ÿ']+", sentence)
+
+def extract_latin_word(sentence: str) -> str | None:
+    """
+    Find the Latin word in a user's question by identifying the token
+    that isn't in the English vocabulary.
+    Returns the Latin word, or None if extraction is ambiguous.
+    """
+    tokens = tokenize(sentence)
+    
+    # Find tokens not in English vocab (case-insensitive check)
+    non_english = [t for t in tokens if t.lower() not in ENGLISH_VOCAB]
+    
+    if len(non_english) == 1:
+        # found one non english word
+        return non_english[0]
+    elif len(non_english) == 0:
+        # found no non english words
+        return None  # No Latin word found
+    else:
+        # found multiple non english words
+        return None
+
 
 def get_response(user_input):
     # TODO: replace with real response logic
     # return "This is a test response."
 
-    inputs = tokenizer(
-        user_input, 
-        return_tensors="pt", 
-        truncation=True, 
-        padding="max_length", 
-        max_length=50
-    ).to(device)
+    # response = morphological_analyser.analyse(user_input)
+    # print(response)
+    # return str(response)
 
-    with torch.no_grad():
-        outputs = model(**inputs)
 
-    probs = torch.softmax(outputs.logits, dim=1)
-    prediction = probs.argmax(dim=1).item()
-    confidence = probs.max().item()
-    label_name = model.config.id2label[prediction]
+    # step 1: intent classification
+    result = intent_classifier.classify(user_input)
+    intent = result["intent"]
+    confidence = result["confidence"]
+    print(f"[LOG] Intent: {intent}, Confidence: {confidence}")
 
-    return f"Intent: {label_name} ({confidence:.1%})"
+    # step 2: extract latin word
+    # TODO: implement a better method for this
+    latin_word = extract_latin_word(user_input)
+    print(f"[LOG] Extracted Latin word: {latin_word}")
+
+    # step 3: morphological analysis
+    morphology = morphological_analyser.analyse(latin_word) if latin_word else None
+    print(f"[LOG] Morphological analysis: {morphology}")
+
+    # does identified pos match expected pos for identified intent? 
+    # if not, fallback to an alternative response
+
+    # step 3.5: checks before template filling
+
+    # fallback: no latin word found
+    if not morphology:
+        return f"I couldn't find a Latin word in your question. Could you rephrase?"
+
+    analysis = morphology[0]  # single-word queries for now
+
+    # fallback: unsupported intent (morphological analyser doesnt cover this feature)
+    feature_key = INTENT_TO_FEATURE.get(intent)
+    if feature_key is None:
+        pretty = intent.replace("_", " ")
+        return f"Sorry, I don't yet support questions about {pretty}."
+
+    feature_data = analysis[feature_key]
+
+    # fallback: the asked-about feature doesn't apply to this word's POS
+    # (e.g. "what tense is puella" -> puella is a noun, so no tense)
+    if feature_key != "pos" and not feature_data.get("applicable", True):
+        pos_label = analysis["pos"]["label"]
+        pretty = intent.replace("_", " ")
+        return (f"The word '{latin_word}' is a {pos_label}, so it doesn't have a {pretty}.")
+
+    # fallback: model isn't confident enough
+    # (here is where i would fall back to the database)
+    if feature_data.get("needs_fallback"):
+        pretty = intent.replace("_", " ")
+        return (f"I'm not confident about the {pretty} of '{latin_word}'. It might be a {feature_data['label']}, but I'm not sure.")
+
+    # step 4: get response template for this intent
+    template = RESPONSE_TEMPLATES["intents"][intent]["templates"][0]
+
+    # step 5: fill in template with word + required morphological feature
+    slot_values = {
+        "WORD":           latin_word,
+        "PART_OF_SPEECH": analysis["pos"]["label"],
+        "PERSON":         analysis["person"]["label"],
+        "MOOD":           analysis["mood"]["label"],
+        "TENSE":          analysis["tense"]["label"],
+        "VOICE":          analysis["voice"]["label"],
+        "NUMBER":         analysis["number"]["label"],
+        "CASE":           analysis["case"]["label"],
+        "GENDER":         analysis["gender"]["label"],
+    }
+
+    response = template["text"]
+    for slot in template["slots"]:
+        response = response.replace("{" + slot + "}", str(slot_values[slot]))
+
+    # step 6: return response
+    print(f"[LOG] Response: {response}")
+    return response
+
 
 @app.route("/")
 def index():
+    return render_template("landing.html")
+
+@app.route("/chatbot")
+def chatbot():
     return render_template("index.html")
+
+@app.route("/survey")
+def survey():
+    return render_template("survey.html")
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -48,6 +214,54 @@ def chat():
     
     bot_reply = get_response(user_message)
     return jsonify({"response": bot_reply})
+
+@app.route("/survey/submit", methods=["POST"])
+def submit_survey():
+    data = request.get_json(silent=True) or {}
+
+    # Coerce Likert fields to int (they arrive as strings from the form)
+    likert_fields = ["easy_to_use", "understood_questions", "answers_accurate",
+                     "answers_helpful", "would_recommend"]
+    for f in likert_fields:
+        try:
+            data[f] = int(data[f]) if data.get(f) else None
+        except (ValueError, TypeError):
+            data[f] = None
+
+    row = {
+        "timestamp":            datetime.utcnow().isoformat(),
+        "latin_level":          data.get("latin_level", ""),
+        "ai_familiarity":       data.get("ai_familiarity", ""),
+        "easy_to_use":          data.get("easy_to_use"),
+        "understood_questions": data.get("understood_questions"),
+        "answers_accurate":     data.get("answers_accurate"),
+        "answers_helpful":      data.get("answers_helpful"),
+        "would_recommend":      data.get("would_recommend"),
+        "liked_most":           data.get("liked_most", ""),
+        "improvements":         data.get("improvements", ""),
+        "errors":               data.get("errors", ""),
+        "other":                data.get("other", ""),
+    }
+
+    try:
+        with sqlite3.connect(DB_PATH) as conn:
+            conn.execute("""
+                INSERT INTO responses (
+                    timestamp, latin_level, ai_familiarity,
+                    easy_to_use, understood_questions, answers_accurate,
+                    answers_helpful, would_recommend,
+                    liked_most, improvements, errors, other
+                ) VALUES (
+                    :timestamp, :latin_level, :ai_familiarity,
+                    :easy_to_use, :understood_questions, :answers_accurate,
+                    :answers_helpful, :would_recommend,
+                    :liked_most, :improvements, :errors, :other
+                )
+            """, row)
+        return jsonify({"status": "ok"})
+    except sqlite3.Error as e:
+        app.logger.exception("Failed to save survey response")
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
