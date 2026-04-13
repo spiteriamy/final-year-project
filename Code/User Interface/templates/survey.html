@@ -95,6 +95,9 @@
 		}
 	</script>
 
+	<!-- icon -->
+	<link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='icon.svg') }}">
+
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 
 	<style>
@@ -273,7 +276,7 @@
 				<!-- Section: Likert -->
 				<section class="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800/60">
 					<h3 class="text-sm font-bold uppercase tracking-wider text-zinc-400 mb-2">Your experience</h3>
-					<p class="text-xs text-zinc-500 mb-5">1 = Strongly disagree · 5 = Strongly agree</p>
+					<p class="text-xs text-zinc-500 mb-5">1 = Strongly disagree · 2 = Disagree · 3 = Neutral · 4 = Agree · 5 = Strongly agree</p>
 
 					<div class="space-y-6">
 						{% set questions = [

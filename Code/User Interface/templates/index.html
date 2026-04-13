@@ -9,7 +9,7 @@
 
 	<!-- Apply saved theme before first paint to prevent flash -->
 	<script>
-		(function() {
+		(function () {
 			const saved = localStorage.getItem('theme');
 			// Default to dark if nothing saved yet
 			if (saved === 'light') {
@@ -23,9 +23,15 @@
 	<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
 	<!-- fonts -->
-	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet" />
-	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
-	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
+		rel="stylesheet" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+		rel="stylesheet" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+		rel="stylesheet" />
 
 	<script id="tailwind-config">
 		tailwind.config = {
@@ -96,6 +102,9 @@
 		}
 	</script>
 
+	<!-- icon -->
+	<link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='icon.svg') }}">
+
 	<link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
 </head>
 
@@ -111,11 +120,13 @@
 			<div class="p-6 flex flex-col flex-1 min-h-0">
 				<div class="flex justify-between items-center mb-4">
 					<!-- Close button — mobile only -->
-					<button id="mobile-drawer-close" class="md:hidden p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
+					<button id="mobile-drawer-close"
+						class="md:hidden p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
 						<span class="material-symbols-outlined">close</span>
 					</button>
 					<!-- Collapse button — desktop only -->
-					<button class="hidden md:flex p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400 group ml-auto"
+					<button
+						class="hidden md:flex p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400 group ml-auto"
 						id="collapse-sidebar">
 						<span class="material-symbols-outlined transition-transform group-hover:-translate-x-0.5"
 							data-icon="chevron_left">chevron_left</span>
@@ -126,8 +137,10 @@
 						<span class="material-symbols-outlined text-on-primary-container text-lg">account_balance</span>
 					</div>
 					<div>
-						<h1 class="text-lg font-bold tracking-tighter text-zinc-100 dark:text-[#c6c6c7]">Talk2MeLatin</h1>
-						<p class="text-[8px] text-zinc-500 dark:text-[#47474e] uppercase tracking-[0.2em]">Latin Grammar Assistant</p>
+						<h1 class="text-lg font-bold tracking-tighter text-zinc-100 dark:text-[#c6c6c7]">Talk2MeLatin
+						</h1>
+						<p class="text-[8px] text-zinc-500 dark:text-[#47474e] uppercase tracking-[0.2em]">Latin Grammar
+							Assistant</p>
 					</div>
 				</div>
 
@@ -140,7 +153,8 @@
 
 				<!-- Dynamic Conversation List -->
 				<nav class="flex flex-col flex-1 min-h-0">
-					<div class="text-[10px] font-bold text-zinc-500 dark:text-[#47474e] uppercase tracking-widest px-3 mb-3 flex-shrink-0">
+					<div
+						class="text-[10px] font-bold text-zinc-500 dark:text-[#47474e] uppercase tracking-widest px-3 mb-3 flex-shrink-0">
 						Conversations
 					</div>
 					<!-- Scrollable chat list -->
@@ -173,13 +187,16 @@
 		<main class="flex-1 flex flex-col h-full bg-surface relative overflow-hidden">
 
 			<!-- TopNavBar Component -->
-			<header class="flex justify-between items-center px-6 h-16 w-full max-w-none docked full-width top-0 z-50 bg-zinc-950/60 dark:bg-[#0e0e10]/60 backdrop-blur-md font-manrope font-medium">
+			<header
+				class="flex justify-between items-center px-6 h-16 w-full max-w-none docked full-width top-0 z-50 bg-zinc-950/60 dark:bg-[#0e0e10]/60 backdrop-blur-md font-manrope font-medium">
 
 				<div class="flex items-center gap-4">
-					<button id="mobile-menu-btn" class="md:hidden p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
+					<button id="mobile-menu-btn"
+						class="md:hidden p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
 						<span class="material-symbols-outlined" style="font-size:22px; display:block;">menu</span>
 					</button>
-					<button class="hidden p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400" id="expand-sidebar">
+					<button class="hidden p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400"
+						id="expand-sidebar">
 						<span class="material-symbols-outlined" style="font-size:22px; display:block;">menu</span>
 					</button>
 					<span class="text-xl font-bold tracking-tight dark:text-[#c6c6c7]">Talk2MeLatin</span>
@@ -187,28 +204,35 @@
 
 				<div class="flex items-center gap-4">
 					<!-- Light/Dark Theme Toggle -->
-					<button class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400" id="theme-toggle">
-						<span class="material-symbols-outlined" style="font-size:22px; display:block;" id="theme-icon">light_mode</span>
+					<button class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400"
+						id="theme-toggle">
+						<span class="material-symbols-outlined" style="font-size:22px; display:block;"
+							id="theme-icon">light_mode</span>
 					</button>
 
 					<!-- Share Button -->
 					<button id="share-btn"
 						class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400 flex items-end gap-1.5">
-						 <span class="material-symbols-outlined" style="font-size:22px; display:block;">download</span>
+						<span class="material-symbols-outlined" style="font-size:22px; display:block;">download</span>
 					</button>
 
 					<!-- More Options Button -->
 					<div class="relative">
-						<button id="more-btn" class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
-							<span class="material-symbols-outlined" style="font-size:22px; display:block;">more_vert</span>
+						<button id="more-btn"
+							class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
+							<span class="material-symbols-outlined"
+								style="font-size:22px; display:block;">more_vert</span>
 						</button>
 						<!-- Dropdown menu -->
-						<div id="more-menu" class="hidden absolute right-0 top-full mt-2 w-48 bg-surface-container-high rounded-lg border border-surface-variant shadow-2xl overflow-hidden z-50">
-							<button id="menu-rename" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-on-surface hover:bg-surface-variant transition-colors">
+						<div id="more-menu"
+							class="hidden absolute right-0 top-full mt-2 w-48 bg-surface-container-high rounded-lg border border-surface-variant shadow-2xl overflow-hidden z-50">
+							<button id="menu-rename"
+								class="w-full flex items-center gap-3 px-4 py-3 text-sm text-on-surface hover:bg-surface-variant transition-colors">
 								<span class="material-symbols-outlined" style="font-size:18px">edit</span>
 								Rename
 							</button>
-							<button id="menu-delete" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-error hover:bg-surface-variant transition-colors">
+							<button id="menu-delete"
+								class="w-full flex items-center gap-3 px-4 py-3 text-sm text-error hover:bg-surface-variant transition-colors">
 								<span class="material-symbols-outlined" style="font-size:18px">delete</span>
 								Delete
 							</button>
@@ -237,11 +261,14 @@
 						class="relative bg-surface-container-high rounded-xl border-b-2 border-surface-container-high focus-within:border-primary transition-all duration-300">
 
 						<!-- user input text box -->
-						<textarea class="w-full bg-transparent border-none focus:ring-0 p-6 pr-16 text-on-surface placeholder:text-outline resize-none min-h-[64px] max-h-[200px] font-body text-lg" id="message-input" placeholder="Message..." rows="1"></textarea>
+						<textarea
+							class="w-full bg-transparent border-none focus:ring-0 p-6 pr-16 text-on-surface placeholder:text-outline resize-none min-h-[64px] max-h-[200px] font-body text-lg"
+							id="message-input" placeholder="Message..." rows="1"></textarea>
 
 						<div class="absolute right-4 bottom-4 flex items-center gap-2">
 							<!-- send message button -->
-							<button id="send-btn" class="bg-surface-bright text-on-surface p-2.5 rounded-lg hover:opacity-80 transition-opacity flex items-center justify-center">
+							<button id="send-btn"
+								class="bg-surface-bright text-on-surface p-2.5 rounded-lg hover:opacity-80 transition-opacity flex items-center justify-center">
 								<span class="material-symbols-outlined font-bold text-sm" data-icon="arrow_upward"
 									style="font-variation-settings: 'wght' 700;">arrow_upward</span>
 							</button>
@@ -249,7 +276,8 @@
 					</div>
 
 					<!-- Text under textarea -->
-					<div id="composer-footer" class="mt-3 flex justify-center items-center gap-6 text-[10px] text-outline uppercase tracking-widest">
+					<div id="composer-footer"
+						class="mt-3 flex justify-center items-center gap-6 text-[10px] text-outline uppercase tracking-widest">
 						<span class="flex items-center gap-1.5">
 							<span class="w-1 h-1 rounded-full bg-primary/50"></span>
 							B.Sc. IT (Hons.) Artificial Intelligence
@@ -274,14 +302,16 @@
 		<!-- Backdrop -->
 		<div id="share-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
 		<!-- Modal Card -->
-		<div class="relative z-10 w-full max-w-md bg-surface-container-high rounded-xl shadow-2xl border border-surface-variant overflow-hidden">
+		<div
+			class="relative z-10 w-full max-w-md bg-surface-container-high rounded-xl shadow-2xl border border-surface-variant overflow-hidden">
 			<!-- Header -->
 			<div class="flex items-center justify-between px-6 py-5 border-b border-surface-variant">
 				<div class="flex items-center gap-3">
 					<span class="material-symbols-outlined text-primary">download</span>
 					<h2 class="font-headline font-bold text-lg text-on-surface">Export Conversation</h2>
 				</div>
-				<button id="share-modal-close" class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-outline hover:text-on-surface">
+				<button id="share-modal-close"
+					class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-outline hover:text-on-surface">
 					<span class="material-symbols-outlined" style="font-size:20px">close</span>
 				</button>
 			</div>
@@ -304,15 +334,18 @@
 					</div>
 				</div>
 				<p class="text-[12px] text-outline leading-relaxed">
-					Saves the full conversation as a <span class="text-on-surface-variant font-medium">.json</span> file, including all messages and timestamps.
+					Saves the full conversation as a <span class="text-on-surface-variant font-medium">.json</span>
+					file, including all messages and timestamps.
 				</p>
 			</div>
 			<!-- Actions -->
 			<div class="flex gap-3 px-6 pb-6">
-				<button id="share-modal-cancel" class="flex-1 py-2.5 rounded-lg border border-surface-variant text-on-surface-variant text-sm font-medium hover:bg-surface-variant transition-colors">
+				<button id="share-modal-cancel"
+					class="flex-1 py-2.5 rounded-lg border border-surface-variant text-on-surface-variant text-sm font-medium hover:bg-surface-variant transition-colors">
 					Cancel
 				</button>
-				<button id="share-modal-download" class="flex-1 py-2.5 rounded-lg bg-primary-container text-on-primary-container text-sm font-semibold hover:opacity-80 transition-opacity flex items-center justify-center gap-2">
+				<button id="share-modal-download"
+					class="flex-1 py-2.5 rounded-lg bg-primary-container text-on-primary-container text-sm font-semibold hover:opacity-80 transition-opacity flex items-center justify-center gap-2">
 					<span class="material-symbols-outlined" style="font-size:18px">download</span>
 					Save as JSON
 				</button>
