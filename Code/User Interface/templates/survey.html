@@ -7,7 +7,7 @@
 	<title>Talk2MeLatin - Feedback Survey</title>
 
 	<script>
-		(function() {
+		(function () {
 			const saved = localStorage.getItem('theme');
 			if (saved === 'light') {
 				document.documentElement.classList.remove('dark');
@@ -19,14 +19,94 @@
 
 	<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet" />
-	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
+		rel="stylesheet" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+		rel="stylesheet" />
+
+	<script id="tailwind-config">
+		tailwind.config = {
+			darkMode: "class",
+			theme: {
+				extend: {
+					colors: {
+						"on-surface": "#e7e4ec",
+						"on-surface-variant": "#acaab1",
+						"secondary-fixed": "#e2e1eb",
+						"secondary-fixed-dim": "#d4d3dd",
+						"on-tertiary": "#5f5e66",
+						"inverse-surface": "#fcf8fb",
+						"on-primary-container": "#d0d0d0",
+						"error-container": "#7f2927",
+						"on-secondary-fixed": "#3e3f46",
+						"tertiary-container": "#eceaf3",
+						"tertiary-fixed": "#efedf6",
+						"primary-fixed-dim": "#d4d3dd",
+						"outline-variant": "#47474e",
+						"on-background": "#e7e4ec",
+						"secondary-container": "#3a3b42",
+						"primary-dim": "#b8b9b9",
+						"error-dim": "#bb5551",
+						"on-secondary-fixed-variant": "#5a5b63",
+						"tertiary-fixed-dim": "#e1dee7",
+						"secondary": "#9d9da6",
+						"secondary-dim": "#9d9da6",
+						"on-error": "#490106",
+						"on-tertiary-container": "#56565d",
+						"on-primary": "#3f4041",
+						"on-primary-fixed-variant": "#5a5c5c",
+						"surface-dim": "#0e0e10",
+						"outline": "#75757c",
+						"on-secondary": "#1e2027",
+						"surface": "#0e0e10",
+						"surface-bright": "#2b2c32",
+						"on-tertiary-fixed-variant": "#626269",
+						"tertiary": "#fbf8ff",
+						"surface-container": "#19191d",
+						"primary": "#c6c6c7",
+						"surface-tint": "#c6c6c7",
+						"inverse-on-surface": "#565457",
+						"primary-fixed": "#e2e2e2",
+						"surface-variant": "#25252b",
+						"on-error-container": "#ff9993",
+						"surface-container-high": "#1f1f24",
+						"tertiary-dim": "#e1dee7",
+						"surface-container-low": "#131316",
+						"inverse-primary": "#5e5f60",
+						"surface-container-highest": "#25252b",
+						"primary-container": "#454747",
+						"on-secondary-container": "#bfbec8",
+						"on-primary-fixed": "#3e4040",
+						"surface-container-lowest": "#000000",
+						"error": "#ee7d77",
+						"on-tertiary-fixed": "#46464d",
+						"background": "#0e0e10"
+					},
+					fontFamily: {
+						"headline": ["Manrope"],
+						"body": ["Inter"],
+						"label": ["Inter"]
+					},
+					borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+				},
+			},
+		}
+	</script>
 
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 
 	<style>
-		body { font-family: 'Inter', sans-serif; }
-		h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+		body {
+			font-family: 'Inter', sans-serif;
+		}
+
+		h1,
+		h2,
+		h3 {
+			font-family: 'Manrope', sans-serif;
+		}
 
 		/* Likert radio buttons styled as pill row */
 		.likert-row {
@@ -34,9 +114,11 @@
 			grid-template-columns: repeat(5, 1fr);
 			gap: 0.5rem;
 		}
+
 		.likert-row input[type="radio"] {
 			display: none;
 		}
+
 		.likert-row label {
 			display: flex;
 			align-items: center;
@@ -52,31 +134,39 @@
 			color: #a1a1aa;
 			line-height: 1.2;
 		}
+
 		.likert-row label:hover {
 			background: rgba(63, 63, 70, 0.6);
 			color: #e7e4ec;
 		}
-		.likert-row input[type="radio"]:checked + label {
+
+		.likert-row input[type="radio"]:checked+label {
 			background: #2a2a2a;
 			border-color: #52525b;
 			color: #ffffff;
 			font-weight: 600;
 		}
+
 		html:not(.dark) .likert-row label {
 			background: #f0f0f0;
 			border-color: #d4d4d4;
 			color: #4a4a4a;
 		}
+
 		html:not(.dark) .likert-row label:hover {
 			background: #e5e5e5;
 		}
-		html:not(.dark) .likert-row input[type="radio"]:checked + label {
+
+		html:not(.dark) .likert-row input[type="radio"]:checked+label {
 			background: #2a2a2a;
 			border-color: #2a2a2a;
 			color: #ffffff;
 		}
 
-		textarea, input[type="text"], input[type="email"], select {
+		textarea,
+		input[type="text"],
+		input[type="email"],
+		select {
 			background: rgba(39, 39, 42, 0.4);
 			border: 1px solid rgba(63, 63, 70, 0.5);
 			border-radius: 0.6rem;
@@ -87,10 +177,14 @@
 			font-size: 0.9rem;
 			transition: border-color 0.15s ease;
 		}
-		textarea:focus, input:focus, select:focus {
+
+		textarea:focus,
+		input:focus,
+		select:focus {
 			outline: none;
 			border-color: #71717a;
 		}
+
 		html:not(.dark) textarea,
 		html:not(.dark) input[type="text"],
 		html:not(.dark) input[type="email"],
@@ -99,6 +193,7 @@
 			border-color: #d4d4d4;
 			color: #121212;
 		}
+
 		html:not(.dark) textarea:focus,
 		html:not(.dark) input:focus,
 		html:not(.dark) select:focus {
@@ -107,19 +202,25 @@
 	</style>
 </head>
 
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col bg-surface text-on-surface">
 
 	<!-- Top bar -->
-	<header class="w-full px-6 py-4 flex items-center justify-between border-b border-zinc-800/60">
-		<a href="{{ url_for('index') }}" class="flex items-center gap-3">
-			<div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center">
-				<span class="material-symbols-outlined text-on-primary-container" style="font-size: 20px;">translate</span>
+	<header class="flex justify-between items-center px-6 h-16 w-full max-w-none docked full-width top-0 z-50 bg-zinc-950/60 dark:bg-[#0e0e10]/60 backdrop-blur-md font-manrope font-medium">
+
+		<div class="flex items-center gap-4">
+			<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center">
+				<span class="material-symbols-outlined text-on-primary-container text-lg">account_balance</span>
 			</div>
-			<h1 class="text-lg font-bold tracking-tight">Talk2MeLatin</h1>
-		</a>
-		<button id="theme-toggle" class="p-2 rounded-lg hover:bg-zinc-800/50 transition-colors" aria-label="Toggle theme">
-			<span class="material-symbols-outlined" style="font-size: 20px;">dark_mode</span>
-		</button>
+			<span class="text-xl font-bold tracking-tight dark:text-[#c6c6c7]">Talk2MeLatin</span>
+		</div>
+
+		<!-- Theme toggle -->
+		<div class="flex items-center gap-4">
+			<button id="theme-toggle" class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400" aria-label="Toggle theme">
+				<span class="material-symbols-outlined" style="font-size:22px; display:block;" id="theme-icon">dark_mode</span>
+			</button>
+		</div>
+
 	</header>
 
 	<!-- Main content -->
@@ -155,7 +256,8 @@
 						</div>
 
 						<div>
-							<label class="block text-sm mb-2">How often do you use AI chatbots (e.g. ChatGPT, Claude)?</label>
+							<label class="block text-sm mb-2">How often do you use AI chatbots (e.g. ChatGPT,
+								Claude)?</label>
 							<select name="ai_familiarity" required>
 								<option value="">Select one…</option>
 								<option value="never">Never</option>
@@ -175,18 +277,19 @@
 
 					<div class="space-y-6">
 						{% set questions = [
-							('easy_to_use', 'The chatbot was easy to use.'),
-							('understood_questions', 'The chatbot understood what I was asking.'),
-							('answers_accurate', 'The answers I received seemed accurate.'),
-							('answers_helpful', 'The answers helped me learn something about Latin.'),
-							('would_recommend', 'I would recommend this tool to a Latin learner.')
+						('easy_to_use', 'The chatbot was easy to use.'),
+						('understood_questions', 'The chatbot understood what I was asking.'),
+						('answers_accurate', 'The answers I received seemed accurate.'),
+						('answers_helpful', 'The answers helped me learn something about Latin.'),
+						('would_recommend', 'I would recommend this tool to a Latin learner.')
 						] %}
 						{% for name, text in questions %}
 						<div>
 							<p class="text-sm mb-3">{{ text }}</p>
 							<div class="likert-row">
 								{% for n in range(1, 6) %}
-								<input type="radio" id="{{ name }}_{{ n }}" name="{{ name }}" value="{{ n }}" required />
+								<input type="radio" id="{{ name }}_{{ n }}" name="{{ name }}" value="{{ n }}"
+									required />
 								<label for="{{ name }}_{{ n }}">{{ n }}</label>
 								{% endfor %}
 							</div>
@@ -209,7 +312,8 @@
 							<textarea name="improvements" rows="3" placeholder="Optional"></textarea>
 						</div>
 						<div>
-							<label class="block text-sm mb-2">Did the chatbot ever give you a wrong or confusing answer? If so, please describe.</label>
+							<label class="block text-sm mb-2">Did the chatbot ever give you a wrong or confusing answer?
+								If so, please describe.</label>
 							<textarea name="errors" rows="3" placeholder="Optional"></textarea>
 						</div>
 						<div>
@@ -222,7 +326,7 @@
 				<!-- Submit -->
 				<div class="flex flex-col items-center gap-3 pt-2">
 					<button type="submit"
-					        class="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary-container text-on-primary-container font-semibold text-base hover:opacity-90 transition-opacity">
+						class="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary-container text-on-primary-container font-semibold text-base hover:opacity-90 transition-opacity">
 						Submit feedback
 						<span class="material-symbols-outlined" style="font-size: 20px;">check</span>
 					</button>
@@ -233,7 +337,8 @@
 			<!-- Thank-you state (hidden by default) -->
 			<div id="thankyou" class="hidden text-center py-16">
 				<div class="w-16 h-16 mx-auto rounded-full bg-primary-container flex items-center justify-center mb-6">
-					<span class="material-symbols-outlined text-on-primary-container" style="font-size: 32px;">check</span>
+					<span class="material-symbols-outlined text-on-primary-container"
+						style="font-size: 32px;">check</span>
 				</div>
 				<h2 class="text-3xl font-extrabold tracking-tight mb-3">Thank you!</h2>
 				<p class="text-zinc-400">Your feedback has been recorded. You can close this window.</p>
@@ -242,8 +347,26 @@
 		</div>
 	</main>
 
-	<footer class="px-6 py-4 text-center text-xs text-zinc-500 border-t border-zinc-800/60">
-		Talk2MeLatin · Latin language learning research project
+	<footer class="w-full pb-8 px-6 pt-4">
+		<div class="max-w-4xl mx-auto relative group">
+
+			<div
+				class="absolute inset-0 bg-primary/5 blur-2xl rounded-full opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none">
+			</div>
+
+			<div id="composer-footer"
+				class="mt-3 flex justify-center items-center gap-6 text-[10px] text-outline uppercase tracking-widest">
+				<span class="flex items-center gap-1.5">
+					<span class="w-1 h-1 rounded-full bg-primary/50"></span>
+					B.Sc. IT (Hons.) Artificial Intelligence
+				</span>
+				<span class="flex items-center gap-1.5">
+					<span class="w-1 h-1 rounded-full bg-primary/50"></span>
+					Department of Artificial Intelligence, University of Malta
+				</span>
+			</div>
+
+		</div>
 	</footer>
 
 	<script>
@@ -282,4 +405,5 @@
 	</script>
 
 </body>
+
 </html>
