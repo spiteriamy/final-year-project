@@ -8,6 +8,7 @@ import json
 import sqlite3
 from datetime import datetime
 from pathlib import Path
+import uuid
 
 app = Flask(__name__)
 
@@ -21,6 +22,7 @@ def init_db():
         conn.execute("""
             CREATE TABLE IF NOT EXISTS responses (
                 id                    INTEGER PRIMARY KEY AUTOINCREMENT,
+                session_id            TEXT    NOT NULL,
                 timestamp             TEXT    NOT NULL,
                 latin_level           TEXT,
                 ai_familiarity        TEXT,
@@ -35,6 +37,19 @@ def init_db():
                 other                 TEXT
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS messages (
+                id           INTEGER PRIMARY KEY AUTOINCREMENT,
+                session_id   TEXT    NOT NULL,
+                chat_id      TEXT    NOT NULL,
+                timestamp    TEXT    NOT NULL,
+                role         TEXT    NOT NULL,   -- 'user' or 'bot'
+                content      TEXT    NOT NULL
+            )
+        """)
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_messages_session ON messages(session_id)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_messages_chat ON messages(chat_id)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_responses_session ON responses(session_id)")
 
 init_db()  # run once at import time
 
@@ -198,21 +213,50 @@ def index():
 
 @app.route("/chatbot")
 def chatbot():
+    # session_id = str(uuid.uuid4())
+    # return render_template("index.html", session_id=session_id)
     return render_template("index.html")
+
+def log_message(session_id, chat_id, role, content):
+    with sqlite3.connect(DB_PATH) as conn:
+        conn.execute(
+            "INSERT INTO messages (session_id, chat_id, timestamp, role, content) VALUES (?, ?, ?, ?, ?)",
+            (session_id, chat_id, datetime.utcnow().isoformat(), role, content)
+        )
 
 @app.route("/survey")
 def survey():
     return render_template("survey.html")
 
+# @app.route("/chat", methods=["POST"])
+# def chat():
+#     data = request.get_json(silent=True) or {}
+#     user_message = data.get("message", "").strip()
+
+#     if not user_message:
+#         return jsonify({"error": "Empty message"}), 400
+    
+#     bot_reply = get_response(user_message)
+#     return jsonify({"response": bot_reply})
+
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json(silent=True) or {}
     user_message = data.get("message", "").strip()
+    session_id   = data.get("session_id", "").strip()
+    chat_id      = data.get("chat_id", "").strip()
 
     if not user_message:
         return jsonify({"error": "Empty message"}), 400
-    
+    if not session_id:
+        return jsonify({"error": "Missing session_id"}), 400
+    if not chat_id:
+        return jsonify({"error": "Missing chat_id"}), 400
+
+    log_message(session_id, chat_id, "user", user_message)
+
     bot_reply = get_response(user_message)
+    log_message(session_id, chat_id, "bot", bot_reply)
     return jsonify({"response": bot_reply})
 
 @app.route("/survey/submit", methods=["POST"])
@@ -229,6 +273,7 @@ def submit_survey():
             data[f] = None
 
     row = {
+        "session_id":           data.get("session_id", ""),
         "timestamp":            datetime.utcnow().isoformat(),
         "latin_level":          data.get("latin_level", ""),
         "ai_familiarity":       data.get("ai_familiarity", ""),
@@ -247,12 +292,12 @@ def submit_survey():
         with sqlite3.connect(DB_PATH) as conn:
             conn.execute("""
                 INSERT INTO responses (
-                    timestamp, latin_level, ai_familiarity,
+                    session_id, timestamp, latin_level, ai_familiarity,
                     easy_to_use, understood_questions, answers_accurate,
                     answers_helpful, would_recommend,
                     liked_most, improvements, errors, other
                 ) VALUES (
-                    :timestamp, :latin_level, :ai_familiarity,
+                    :session_id, :timestamp, :latin_level, :ai_familiarity,
                     :easy_to_use, :understood_questions, :answers_accurate,
                     :answers_helpful, :would_recommend,
                     :liked_most, :improvements, :errors, :other

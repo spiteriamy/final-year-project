@@ -1,3 +1,27 @@
+
+// -----------------------------------------------------------------------------------------------
+// session id - persists across reloads and new chats for the whole evaluation
+
+const SESSION_KEY = 'talk2melatin_session_id';
+
+function getOrCreateSessionId() {
+    let id = localStorage.getItem(SESSION_KEY);
+    if (!id) {
+        id = (crypto.randomUUID && crypto.randomUUID()) ||
+             // fallback for older browsers
+             'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                 const r = Math.random() * 16 | 0;
+                 const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                 return v.toString(16);
+             });
+        localStorage.setItem(SESSION_KEY, id);
+    }
+    return id;
+}
+
+const SESSION_ID = getOrCreateSessionId();
+
+
 // -----------------------------------------------------------------------------------------------
 // CHAT SESSION MANAGEMENT
 
@@ -300,7 +324,9 @@ async function sendMessage() {
     const res = await fetch('/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text })
+      // body: JSON.stringify({ message: text })
+      // body: JSON.stringify({ message: text, session_id: SESSION_ID })
+      body: JSON.stringify({ message: text, session_id: SESSION_ID, chat_id: currentChatId })
     });
     const data = await res.json();
     typingRow.remove();
@@ -481,6 +507,20 @@ document.getElementById('menu-delete').addEventListener('click', () => {
   if (confirm(`Delete ${label}? This cannot be undone.`)) {
     deleteChat(currentChatId);
   }
+});
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------
+// SURVEY
+
+feedbackBtn = document.getElementById('feedback-btn');
+
+// redirect to survey page with session ID as query parameter
+feedbackBtn.addEventListener('click', () => {
+  window.location.href = `survey?sid=${SESSION_ID}`;
 });
 
 
