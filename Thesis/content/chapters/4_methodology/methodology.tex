@@ -14,7 +14,7 @@ The user interacts with the system through the conversational interface by submi
 The chatbot takes input in English as the students' proficiency in Latin may still be too limited to ask questions in Latin.
 The user's input is processed by an intent classification model that identifies the grammatical category being asked about in the question.
 The Latin word is extracted from the question and the system retrieves the relevant grammatical information from the Latin grammar knowledge base or a morphological analysis model.
-A response is generated based on the identified intent and the retrieved grammatical information.
+A response is generated based on the identified intent and the retrieved grammatical information by using pre-defined response templates.
 The response may combine both English and Latin to provide more exposure to the Latin language and encourage more interaction in Latin.
 Finally, the chatbot returns the response to the user.
 
@@ -105,11 +105,19 @@ the results of both morphological analysers were evaluated and compared to deter
 
 template-based response generation
 
+the response generation module uses a template-based approach to generate responses based on the identified intent and the retrieved grammatical information.
+for each intent category, a set of response templates is defined, which contain placeholders for the relevant grammatical information.
+when a response needs to be generated, the appropriate template is selected based on the identified intent, and the placeholders in the template are filled with the retrieved grammatical information to create a complete response.
+the latin word from the question is extracted in order to get the relevant grammatical information for that word, which is then used to fill in the placeholders in the response template.
+
 \section{Conversational Interface Design}
 \label{sec:conversational_interface_design}
 
-\subsection{Command Line Interface}
-\label{subsec:command_line_interface}
+A web-based interface was developed for the chatbot, allowing users to interact with the system through a user-friendly interface.
+The interface was designed to be simple and intuitive, with a text input field for users to submit
 
-\subsection{Web-based Interface}
-\label{subsec:web_based_interface}
+First there is a landing page where users are given a bit of background on the project and instructions on how to use the chatbot.
+Then there is the main chat interface where users can submit their questions and receive responses from the chatbot.
+The chat interface displays the conversation history, allowing users to see their previous questions and the chatbot's responses.
+After chatting with the chatbot, users are directed to a feedback form where they can provide their feedback on the chatbot's performance and their overall experience.
+
