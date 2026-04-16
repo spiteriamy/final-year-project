@@ -1,0 +1,139 @@
+{
+    "placeholders": {
+        "WORD": "",
+        "PART_OF_SPEECH": "",
+        "PERSON": "",
+        "MOOD": "",
+        "TENSE": "",
+        "VOICE": "",
+        "ASPECT": "",
+        "NUMBER": "",
+        "CASE": "",
+        "GENDER": "",
+        "DECLENSION": "",
+        "CONJUGATION": ""
+    },
+    "intents": {
+        "part_of_speech": {
+            "templates": [
+                {
+                    "text": "The word '{WORD}' is a {PART_OF_SPEECH}.",
+                    "slots": [
+                        "WORD",
+                        "PART_OF_SPEECH"
+                    ]
+                }
+            ]
+        },
+        "person": {
+            "templates": [
+                {
+                    "text": "{WORD} is in the {PERSON} person.",
+                    "slots": [
+                        "WORD",
+                        "PERSON"
+                    ]
+                }
+            ]
+        },
+        "mood": {
+            "templates": [
+                {
+                    "text": "The mood of '{WORD}' is {MOOD}.",
+                    "slots": [
+                        "WORD",
+                        "MOOD"
+                    ]
+                }
+            ]
+        },
+        "tense": {
+            "templates": [
+                {
+                    "text": "{WORD} is in the {TENSE} tense.",
+                    "slots": [
+                        "WORD",
+                        "TENSE"
+                    ]
+                }
+            ]
+        },
+        "voice": {
+            "templates": [
+                {
+                    "text": "The voice of '{WORD}' is {VOICE}.",
+                    "slots": [
+                        "WORD",
+                        "VOICE"
+                    ]
+                }
+            ]
+        },
+        "aspect": {
+            "templates": [
+                {
+                    "text": "The aspect of '{WORD}' is {ASPECT}.",
+                    "slots": [
+                        "WORD",
+                        "ASPECT"
+                    ]
+                }
+            ]
+        },
+        "number": {
+            "templates": [
+                {
+                    "text": "The word '{WORD}' is {NUMBER}.",
+                    "slots": [
+                        "WORD",
+                        "NUMBER"
+                    ]
+                }
+            ]
+        },
+        "case": {
+            "templates": [
+                {
+                    "text": "The word '{WORD}' is in the {CASE} case.",
+                    "slots": [
+                        "WORD",
+                        "CASE"
+                    ]
+                }
+            ]
+        },
+        "gender": {
+            "templates": [
+                {
+                    "text": "The word '{WORD}' is {GENDER}.",
+                    "slots": [
+                        "WORD",
+                        "GENDER"
+                    ]
+                }
+            ]
+        },
+        "declension": {
+            "templates": [
+                {
+                    "text": "The word '{WORD}' is {DECLENSION} declension.",
+                    "slots": [
+                        "WORD",
+                        "DECLENSION"
+                    ]
+                }
+            ]
+        },
+        "conjugation": {
+            "templates": [
+                {
+                    "text": "The word '{WORD}' is {CONJUGATION} conjugation.",
+                    "slots": [
+                        "WORD",
+                        "CONJUGATION"
+                    ]
+                }
+            ]
+        }
+    }
+}
