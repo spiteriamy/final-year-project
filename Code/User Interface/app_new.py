@@ -182,12 +182,12 @@ def index():
 
 @app.route("/chatbot")
 def chatbot():
-    return render_template("index.html")
+    return render_template("index_survey.html")
 
 @app.route("/survey")
 def survey():
     return render_template("survey.html")
-
+    
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json(silent=True) or {}
@@ -208,7 +208,7 @@ def chat():
     log_message(session_id, chat_id, "bot", bot_reply)
     return jsonify({"response": bot_reply})
 
-@app.route("/survey/submit", methods=["POST"])
+@app.route("/chatbot_with_survey/submit", methods=["POST"])
 def submit_survey():
     data = request.get_json(silent=True) or {}
 
