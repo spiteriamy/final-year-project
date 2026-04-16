@@ -23,10 +23,11 @@ def init_db(db_path: Path):
                 understood_questions  INTEGER,
                 answers_accurate      INTEGER,
                 answers_helpful       INTEGER,
+                enjoyed_using         INTEGER,
+                increased_interest    INTEGER,
                 would_recommend       INTEGER,
                 liked_most            TEXT,
                 improvements          TEXT,
-                errors                TEXT,
                 other                 TEXT
             )
         """)
