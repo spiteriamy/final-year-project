@@ -234,7 +234,7 @@
 				<p class="text-xs uppercase tracking-[0.2em] text-zinc-500 mb-3">Step 2 of 2</p>
 				<h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-3">Your feedback</h2>
 				<p class="text-zinc-400 leading-relaxed">
-					Thanks for trying Talk2MeLatin. Please answer a few short questions
+					Thank you for participating in this evaluation. Please answer a few short questions
 					about your experience.
 				</p>
 			</div>
@@ -251,16 +251,15 @@
 							<select name="latin_level" required>
 								<option value="">Select one…</option>
 								<option value="none">No prior experience</option>
-								<option value="beginner">Beginner (≤1 year)</option>
-								<option value="intermediate">Intermediate (1–3 years)</option>
-								<option value="advanced">Advanced (3+ years)</option>
+								<option value="beginner">Beginner</option>
+								<option value="intermediate">Intermediate</option>
+								<option value="advanced">Advanced</option>
 								<option value="fluent">Fluent / professional</option>
 							</select>
 						</div>
 
 						<div>
-							<label class="block text-sm mb-2">How often do you use AI chatbots (e.g. ChatGPT,
-								Claude)?</label>
+							<label class="block text-sm mb-2">How often do you use AI chatbots (e.g. ChatGPT, Claude)?</label>
 							<select name="ai_familiarity" required>
 								<option value="">Select one…</option>
 								<option value="never">Never</option>
@@ -278,13 +277,18 @@
 					<h3 class="text-sm font-bold uppercase tracking-wider text-zinc-400 mb-2">Your experience</h3>
 					<p class="text-xs text-zinc-500 mb-5">1 = Strongly disagree · 2 = Disagree · 3 = Neutral · 4 = Agree · 5 = Strongly agree</p>
 
+					<!-- 
+					5. I learned new vocabulary through my conversations with the chatbot.
+					10. Using the chatbot helped me improve my English speaking skills overall. -->
 					<div class="space-y-6">
 						{% set questions = [
-						('easy_to_use', 'The chatbot was easy to use.'),
+						('easy_to_use', 'The chatbot was easy to use and navigate.'),
 						('understood_questions', 'The chatbot understood what I was asking.'),
 						('answers_accurate', 'The answers I received seemed accurate.'),
-						('answers_helpful', 'The answers helped me learn something about Latin.'),
-						('would_recommend', 'I would recommend this tool to a Latin learner.')
+						('answers_helpful', 'The answers I received were helpful for my learning.'),
+						('enjoyed_using', 'I enjoyed using the chatbot to practice Latin.'),
+						('increased_interest', 'Using the chatbot increased my interest in learning Latin.'),
+						('would_recommend', 'I would recommend this tool to other Latin learners.')
 						] %}
 						{% for name, text in questions %}
 						<div>
@@ -315,12 +319,7 @@
 							<textarea name="improvements" rows="3" placeholder="Optional"></textarea>
 						</div>
 						<div>
-							<label class="block text-sm mb-2">Did the chatbot ever give you a wrong or confusing answer?
-								If so, please describe.</label>
-							<textarea name="errors" rows="3" placeholder="Optional"></textarea>
-						</div>
-						<div>
-							<label class="block text-sm mb-2">Anything else you'd like us to know?</label>
+							<label class="block text-sm mb-2">Anything else you'd like to add?</label>
 							<textarea name="other" rows="3" placeholder="Optional"></textarea>
 						</div>
 					</div>
