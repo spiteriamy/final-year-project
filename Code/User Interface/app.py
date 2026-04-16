@@ -4,56 +4,17 @@ from models.inference import MorphologicalAnalyserService, IntentClassifierServi
 import re
 from nltk.corpus import words
 import json
-
 import sqlite3
+from database import init_db
 from datetime import datetime
 from pathlib import Path
-import uuid
+
 
 app = Flask(__name__)
 
 # initialise database
-
 DB_PATH = Path("survey_responses.db")
-
-
-def init_db():
-    with sqlite3.connect(DB_PATH) as conn:
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS responses (
-                id                    INTEGER PRIMARY KEY AUTOINCREMENT,
-                session_id            TEXT    NOT NULL,
-                timestamp             TEXT    NOT NULL,
-                latin_level           TEXT,
-                ai_familiarity        TEXT,
-                easy_to_use           INTEGER,
-                understood_questions  INTEGER,
-                answers_accurate      INTEGER,
-                answers_helpful       INTEGER,
-                would_recommend       INTEGER,
-                liked_most            TEXT,
-                improvements          TEXT,
-                errors                TEXT,
-                other                 TEXT
-            )
-        """)
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS messages (
-                id           INTEGER PRIMARY KEY AUTOINCREMENT,
-                session_id   TEXT    NOT NULL,
-                chat_id      TEXT    NOT NULL,
-                timestamp    TEXT    NOT NULL,
-                role         TEXT    NOT NULL,   -- 'user' or 'bot'
-                content      TEXT    NOT NULL
-            )
-        """)
-        conn.execute("CREATE INDEX IF NOT EXISTS idx_messages_session ON messages(session_id)")
-        conn.execute("CREATE INDEX IF NOT EXISTS idx_messages_chat ON messages(chat_id)")
-        conn.execute("CREATE INDEX IF NOT EXISTS idx_responses_session ON responses(session_id)")
-
-init_db()  # run once at import time
-
-
+init_db(DB_PATH)  # run once at import time
 
 # Load response templates once at startup
 with open("response_templates.json", "r", encoding="utf-8") as f:
@@ -126,15 +87,9 @@ def extract_latin_word(sentence: str) -> str | None:
         return None
 
 
+# --- Helper functions -------------------------------------------------------------------
+
 def get_response(user_input):
-    # TODO: replace with real response logic
-    # return "This is a test response."
-
-    # response = morphological_analyser.analyse(user_input)
-    # print(response)
-    # return str(response)
-
-
     # step 1: intent classification
     result = intent_classifier.classify(user_input)
     intent = result["intent"]
@@ -206,17 +161,6 @@ def get_response(user_input):
     print(f"[LOG] Response: {response}")
     return response
 
-
-@app.route("/")
-def index():
-    return render_template("landing.html")
-
-@app.route("/chatbot")
-def chatbot():
-    # session_id = str(uuid.uuid4())
-    # return render_template("index.html", session_id=session_id)
-    return render_template("index.html")
-
 def log_message(session_id, chat_id, role, content):
     with sqlite3.connect(DB_PATH) as conn:
         conn.execute(
@@ -224,20 +168,19 @@ def log_message(session_id, chat_id, role, content):
             (session_id, chat_id, datetime.utcnow().isoformat(), role, content)
         )
 
+# --- Flask routes -----------------------------------------------------------------------
+
+@app.route("/")
+def index():
+    return render_template("landing.html")
+
+@app.route("/chatbot")
+def chatbot():
+    return render_template("index.html")
+
 @app.route("/survey")
 def survey():
     return render_template("survey.html")
-
-# @app.route("/chat", methods=["POST"])
-# def chat():
-#     data = request.get_json(silent=True) or {}
-#     user_message = data.get("message", "").strip()
-
-#     if not user_message:
-#         return jsonify({"error": "Empty message"}), 400
-    
-#     bot_reply = get_response(user_message)
-#     return jsonify({"response": bot_reply})
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -307,6 +250,8 @@ def submit_survey():
     except sqlite3.Error as e:
         app.logger.exception("Failed to save survey response")
         return jsonify({"status": "error", "message": str(e)}), 500
+
+# --- Main --------------------------------------------------------------------------------
 
 if __name__ == "__main__":
     app.run(debug=True)
