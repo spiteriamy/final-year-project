@@ -134,6 +134,15 @@
                     ]
                 }
             ]
+        },
+        "oos" : {
+            "templates": [
+                {
+                    "text": "Sorry, I don't understand that. Can you please rephrase?",
+                    "slots": [
+                    ]
+                }
+            ]
         }
     }
 }
