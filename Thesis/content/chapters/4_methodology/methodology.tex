@@ -31,6 +31,42 @@ Finally, the chatbot returns the response to the user.
 % to fill in and add additional grammar information to the
 % entries.
 
+A dataset of Latin words and their grammatical features
+was created by using the \gls{unimorph} dataset as the
+base dataset and using the Whitaker's Words program
+to fill in and add additional grammar information to the
+entries.
+
+The \gls{unimorph} dataset was selected as it contains
+many entries of individual Latin words, along with their
+lemma and the grammatical features for how the word
+was inflected. Having a large collection of words and
+their corresponding grammatical features is needed to
+construct the intent classification dataset, which will
+contain questions about the grammar categories of specific words. While UniMorph is a good starting point
+for data, it has some limitations. The first limitation is
+that it does not include any information about the declension numbers of Latin nouns, nor does it include the
+conjugation number of Latin verbs. These features are
+important for Latin learners as they reveal the paradigms
+of word inflections according to different grammatical
+properties. Another limitation of \gls{unimorph} is that for
+certain parts of speech, some grammatical properties
+are left out. For example, gender is not included with
+nouns, even though Latin nouns do have a grammatical
+gender.
+
+To address these limitations, Whitaker's Words will
+be used to fill in the gaps. This program was chosen
+since the output that it gives is already similar to the
+format of the \gls{unimorph} entries, and it includes the
+additional information that is missing. Since it is a
+command line program, it can be easily interacted with
+and controlled programmatically so that the extraction
+of the needed information can be automated.
+
+The result was a CSV file of many entries of Latin
+word forms along with their grammatical features.
+
 \subsection{Intent Classification Dataset}
 \label{sec:intent_classification_dataset}
 
@@ -50,6 +86,45 @@ each intent contains the list of target labels that the questions under that int
 and also the list of templates.
 each template contains the text and the slots.
 the text is the actual question template with the placeholders, and the slots are the corresponding placeholders that need to be filled in to generate a complete question.
+
+%%%%%%% 
+% TODO: UPDATE THIS SECTION
+
+A structured dataset of grammar-related question templates 
+and intents was created to be the training data for the 
+intent classification model discussed in Section~\ref{sec:intent_classification_model}. 
+
+The intent categories consist of the grammar feature 
+the user is asking about for a specific word. For example, 
+if the user is asking about what tense a verb is in, that 
+question will be labelled as a tense query. The chosen intent 
+categories are based on the different grammatical features 
+covered in the dataset described in Section~\ref{sec:latin_words_dataset}. 
+These categories should cover common questions learners may 
+have about specific Latin words. Another category will be 
+defined to cover out of scope inputs.
+
+The dataset will be created by first creating example question 
+templates for each intent category. The templates will include 
+placeholders so that when generating the questions, the 
+appropriate Latin words will be inserted in their place. 
+The templates will be created by manually writing different 
+example questions, as well as making use of large language 
+models to help generate variations of different ways of how 
+the same question can be phrased. The data augmentation 
+techniques that will be used to increase the number of 
+different question templates include paraphrasing of questions, 
+both by replacing synonyms and varying the structure of the 
+sentences. 
+
+These templates will then be used to automatically generate 
+many variations of questions to train the model, by taking a 
+Latin word from the dataset described in the previous section 
+and inserting it in the template. Along with each generated 
+question, the corresponding intent will also be recorded in 
+the dataset. This will create question and intent pairs for 
+the classification task.
+
 
 \subsection{Morphological Analysis Dataset}
 \label{sec:morphological_analysis_dataset}
