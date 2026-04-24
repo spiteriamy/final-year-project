@@ -253,13 +253,13 @@
 				</nav>
 
 				<!-- Bottom nav links -->
-				<nav class="space-y-1 mt-4 pt-4 border-t border-surface-variant flex-shrink-0">
+				<!-- <nav class="space-y-1 mt-4 pt-4 border-t border-surface-variant flex-shrink-0">
 					<a class="flex items-center gap-3 px-3 py-2 text-zinc-500 dark:text-[#47474e] hover:bg-zinc-800/50 dark:hover:bg-[#19191d]/50 transition-colors rounded-md"
 						href="#" id="feedback-btn">
 						<span class="material-symbols-outlined" data-icon="chat">chat</span>
 						<span>Feedback</span>
 					</a>
-				</nav>
+				</nav> -->
 			</div>
 
 		</aside>
@@ -374,34 +374,52 @@
 
 		</main>
 
-		<!-- Survey side panel (desktop only, fixed width, scrolls independently) -->
-		<aside class="hidden md:flex flex-col h-full bg-zinc-50/50 dark:bg-[#131316] w-96 border-l border-surface-variant font-manrope text-sm tracking-tight flex-shrink-0"
-			id="survey-panel">
+		<!-- Survey side panel: desktop right-column, mobile bottom sheet -->
+		<aside
+			class="flex flex-col md:h-full bg-zinc-50/50 dark:bg-[#131316] md:w-96 md:border-l md:border-surface-variant font-manrope text-sm tracking-tight md:flex-shrink-0"
+			id="survey-panel" data-state="peek">
 
-			<!-- Panel header (stays pinned while form scrolls) -->
-			<div class="flex items-center gap-3 px-6 py-5 border-b border-surface-variant flex-shrink-0">
-				<div>
-                    <h2 class="text-base font-extrabold tracking-tighter text-zinc-100 dark:text-[#c6c6c7]">Your feedback</h2>
-                    <p class="text-[9px] text-zinc-500 dark:text-[#47474e] tracking-[0.2em]">
-                        Thank you for participating in this evaluation.
-                        Please answer a few short questions about your experience.
-                    </p>
+			<!-- Drag handle — mobile only -->
+			<button type="button" id="sheet-handle"
+				class="md:hidden flex items-center justify-center pt-2 pb-1 flex-shrink-0"
+				aria-label="Drag to resize feedback panel">
+				<div class="w-9 h-1 bg-zinc-600 dark:bg-[#47474e] rounded-full pointer-events-none"></div>
+			</button>
+
+			<!-- Panel header (stays pinned while form scrolls, tap to toggle on mobile) -->
+			<div id="sheet-header"
+				class="flex items-center justify-between gap-3 px-6 py-4 md:py-5 border-b border-surface-variant flex-shrink-0 cursor-pointer md:cursor-default select-none">
+				<div class="flex-1 min-w-0">
+					<h2 class="text-base font-extrabold tracking-tighter text-zinc-100 dark:text-[#c6c6c7]">Your
+						feedback</h2>
+					<!-- Desktop subtitle -->
+					<p class="hidden md:block text-[9px] text-zinc-500 dark:text-[#47474e] tracking-[0.2em]">
+						Thank you for participating in this evaluation.
+						Please answer a few short questions about your experience.
+					</p>
+					<!-- Mobile progress -->
+					<p class="md:hidden text-[10px] text-outline mt-1 tracking-wide" id="peek-progress">0 of 9 answered
+					</p>
 				</div>
+				<span class="md:hidden material-symbols-outlined text-zinc-400 transition-transform duration-200"
+					id="sheet-chevron" style="font-size:22px;">keyboard_arrow_up</span>
 			</div>
 
 			<!-- Scrollable content -->
-			<div class="flex-1 overflow-y-auto custom-scrollbar px-6 py-6">
+			<div class="flex-1 overflow-y-auto custom-scrollbar px-6 py-6" id="sheet-body">
 
 				<form id="survey-form" class="space-y-6">
 
 					<!-- About you -->
 					<section class="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800/60">
-						<h3 class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-[#47474e] mb-4">
+						<h3
+							class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-[#47474e] mb-4">
 							About you
 						</h3>
 						<div class="space-y-4">
 							<div>
-                                <label class="block text-xs mb-2 text-on-surface-variant">How would you describe your level of Latin?</label>
+								<label class="block text-xs mb-2 text-on-surface-variant">How would you describe your
+									level of Latin?</label>
 								<select name="latin_level" required>
 									<option value="">Select one...</option>
 									<option value="none">No prior experience</option>
@@ -412,7 +430,8 @@
 								</select>
 							</div>
 							<div>
-								<label class="block text-xs mb-2 text-on-surface-variant">How often do you use AI chatbots (e.g. ChatGPT, Claude)?</label>
+								<label class="block text-xs mb-2 text-on-surface-variant">How often do you use AI
+									chatbots (e.g. ChatGPT, Claude)?</label>
 								<select name="ai_familiarity" required>
 									<option value="">Select one...</option>
 									<option value="never">Never</option>
@@ -426,28 +445,31 @@
 					</section>
 
 					<!-- Likert -->
-                    <section class="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800/60">
-						<h3 class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-[#47474e] mb-1">
+					<section class="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800/60">
+						<h3
+							class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-[#47474e] mb-1">
 							Your experience
 						</h3>
-                        <p class="text-[11px] text-outline mb-4">1 = Strongly disagree · 2 = Disagree · 3 = Neutral · 4 = Agree · 5 = Strongly agree</p>
+						<p class="text-[11px] text-outline mb-4">1 = Strongly disagree · 2 = Disagree · 3 = Neutral · 4
+							= Agree · 5 = Strongly agree</p>
 
 						<div class="space-y-5">
 							{% set questions = [
-								('easy_to_use', 'The chatbot was easy to use and navigate.'),
-								('understood_questions', 'The chatbot understood what I was asking.'),
-								('answers_accurate', 'The answers I received seemed accurate.'),
-								('answers_helpful', 'The answers I received were helpful for my learning.'),
-								('enjoyed_using', 'I enjoyed using the chatbot to practice Latin.'),
-								('increased_interest', 'Using the chatbot increased my interest in learning Latin.'),
-								('would_recommend', 'I would recommend this tool to other Latin learners.')
+							('easy_to_use', 'The chatbot was easy to use and navigate.'),
+							('understood_questions', 'The chatbot understood what I was asking.'),
+							('answers_accurate', 'The answers I received seemed accurate.'),
+							('answers_helpful', 'The answers I received were helpful for my learning.'),
+							('enjoyed_using', 'I enjoyed using the chatbot to practice Latin.'),
+							('increased_interest', 'Using the chatbot increased my interest in learning Latin.'),
+							('would_recommend', 'I would recommend this tool to other Latin learners.')
 							] %}
 							{% for name, text in questions %}
 							<div>
 								<p class="text-xs mb-2 text-on-surface-variant leading-relaxed">{{ text }}</p>
 								<div class="likert-row">
 									{% for n in range(1, 6) %}
-									<input type="radio" id="sp_{{ name }}_{{ n }}" name="{{ name }}" value="{{ n }}" required />
+									<input type="radio" id="sp_{{ name }}_{{ n }}" name="{{ name }}" value="{{ n }}"
+										required />
 									<label for="sp_{{ name }}_{{ n }}">{{ n }}</label>
 									{% endfor %}
 								</div>
@@ -458,20 +480,24 @@
 
 					<!-- Open feedback -->
 					<section class="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800/60">
-						<h3 class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-[#47474e] mb-4">
+						<h3
+							class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-[#47474e] mb-4">
 							Open feedback
 						</h3>
 						<div class="space-y-4">
 							<div>
-								<label class="block text-xs mb-2 text-on-surface-variant">What did you like most?</label>
+								<label class="block text-xs mb-2 text-on-surface-variant">What did you like
+									most?</label>
 								<textarea name="liked_most" rows="3" placeholder="Optional"></textarea>
 							</div>
 							<div>
-								<label class="block text-xs mb-2 text-on-surface-variant">What could be improved?</label>
+								<label class="block text-xs mb-2 text-on-surface-variant">What could be
+									improved?</label>
 								<textarea name="improvements" rows="3" placeholder="Optional"></textarea>
 							</div>
 							<div>
-								<label class="block text-xs mb-2 text-on-surface-variant">Anything else you'd like to add?</label>
+								<label class="block text-xs mb-2 text-on-surface-variant">Anything else you'd like to
+									add?</label>
 								<textarea name="other" rows="3" placeholder="Optional"></textarea>
 							</div>
 						</div>
@@ -479,28 +505,23 @@
 
 					<!-- Submit -->
 					<div class="flex flex-col items-center gap-2 pt-1">
-						<button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-primary-container text-on-primary-container font-semibold text-sm hover:opacity-90 transition-opacity">
+						<button type="submit"
+							class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-primary-container text-on-primary-container font-semibold text-sm hover:opacity-90 transition-opacity">
 							Submit feedback
 							<span class="material-symbols-outlined" style="font-size: 18px;">check</span>
 						</button>
-						<p class="text-[10px] text-outline text-center">Your responses will be used for research purposes only.</p>
+						<p class="text-[10px] text-outline text-center">Your responses will be used for research
+							purposes only.</p>
 					</div>
 
 				</form>
 
-                <!-- <div id="thankyou" class="hidden text-center py-16">
-				<div class="w-16 h-16 mx-auto rounded-full bg-primary-container flex items-center justify-center mb-6">
-					<span class="material-symbols-outlined text-on-primary-container"
-						style="font-size: 32px;">check</span>
-				</div>
-				<h2 class="text-3xl font-extrabold tracking-tight mb-3">Thank you!</h2>
-				<p class="text-zinc-400">Your feedback has been recorded. You can close this window.</p>
-			</div> -->
-
 				<!-- Thank-you state (hidden by default) -->
 				<div id="survey-thankyou" class="hidden text-center py-12">
-					<div class="w-12 h-12 mx-auto rounded-full bg-primary-container flex items-center justify-center mb-4">
-						<span class="material-symbols-outlined text-on-primary-container" style="font-size: 24px;">check</span>
+					<div
+						class="w-12 h-12 mx-auto rounded-full bg-primary-container flex items-center justify-center mb-4">
+						<span class="material-symbols-outlined text-on-primary-container"
+							style="font-size: 24px;">check</span>
 					</div>
 					<h2 class="text-xl font-extrabold tracking-tight mb-2">Thank you!</h2>
 					<p class="text-xs text-outline">Your feedback has been recorded.</p>
@@ -512,6 +533,9 @@
 
 	<!-- Mobile drawer backdrop -->
 	<div id="mobile-drawer-backdrop"></div>
+
+	<!-- Feedback sheet backdrop (mobile) -->
+	<div id="sheet-backdrop"></div>
 
 	<!-- Share / Export Modal -->
 	<div id="share-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -572,32 +596,159 @@
 	<script src="{{ url_for('static', filename='scripts_survey.js') }}"></script>
 
 	<script>
-		// Inline survey panel submission
-		(function () {
+			// Inline survey panel submission
+			(function () {
+				const form = document.getElementById('survey-form');
+				const thankyou = document.getElementById('survey-thankyou');
+				if (!form) return;
+
+				form.addEventListener('submit', async (e) => {
+					e.preventDefault();
+					const formData = new FormData(form);
+					const payload = Object.fromEntries(formData.entries());
+					payload.session_id = localStorage.getItem('talk2melatin_session_id') || '';
+
+					try {
+						const res = await fetch("{{ url_for('submit_survey') }}", {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify(payload)
+						});
+						if (!res.ok) throw new Error('Submission failed');
+						form.classList.add('hidden');
+						thankyou.classList.remove('hidden');
+						localStorage.removeItem('talk2melatin_session_id');
+
+						// update mobile peek + collapse to peek so it's unobtrusive
+						const peek = document.getElementById('peek-progress');
+						if (peek) peek.textContent = 'Thank you - submitted';
+						document.getElementById('survey-panel')?.setAttribute('data-state', 'peek');
+						document.getElementById('sheet-backdrop')?.classList.remove('active');
+					} catch (err) {
+						alert('Something went wrong. Please try again.');
+						console.error(err);
+					}
+				});
+			})();
+
+		// Mobile bottom-sheet behaviour
+		(function initMobileSheet() {
+			const panel = document.getElementById('survey-panel');
+			const handle = document.getElementById('sheet-handle');
+			const header = document.getElementById('sheet-header');
+			const backdrop = document.getElementById('sheet-backdrop');
+			const progressEl = document.getElementById('peek-progress');
 			const form = document.getElementById('survey-form');
-			const thankyou = document.getElementById('survey-thankyou');
-			if (!form) return;
+			const messageInput = document.getElementById('message-input');
+			if (!panel || !form) return;
 
-			form.addEventListener('submit', async (e) => {
-				e.preventDefault();
-				const formData = new FormData(form);
-				const payload = Object.fromEntries(formData.entries());
-				payload.session_id = localStorage.getItem('talk2melatin_session_id') || '';
+			const mq = window.matchMedia('(max-width: 767px)');
+			const isMobile = () => mq.matches;
 
-				try {
-					const res = await fetch("{{ url_for('submit_survey') }}", {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify(payload)
-					});
-					if (!res.ok) throw new Error('Submission failed');
-					form.classList.add('hidden');
-					thankyou.classList.remove('hidden');
-					localStorage.removeItem('talk2melatin_session_id');
-				} catch (err) {
-					alert('Something went wrong. Please try again.');
-					console.error(err);
+			function setState(next) {
+				panel.dataset.state = next;
+				if (next === 'peek' || !isMobile()) {
+					backdrop.classList.remove('active');
+				} else {
+					backdrop.classList.add('active');
+					// close the nav drawer if it happens to be open
+					document.getElementById('sidebar')?.classList.remove('mobile-open');
+					document.getElementById('mobile-drawer-backdrop')?.classList.remove('active');
 				}
+			}
+
+			// Tap header → toggle peek ↔ half
+			header.addEventListener('click', () => {
+				if (!isMobile()) return;
+				setState(panel.dataset.state === 'peek' ? 'half' : 'peek');
+			});
+
+			// Tap backdrop → collapse
+			backdrop.addEventListener('click', () => setState('peek'));
+
+			// Drag handle: free drag with snap, or tap to cycle peek → half → full → peek
+			let startY = 0, startH = 0, dragging = false, dragged = false, pid = null;
+			const DRAG_THRESHOLD = 6;
+
+			handle.addEventListener('pointerdown', (e) => {
+				if (!isMobile()) return;
+				dragging = true; dragged = false;
+				pid = e.pointerId;
+				startY = e.clientY;
+				startH = panel.offsetHeight;
+				handle.setPointerCapture(pid);
+			});
+
+			handle.addEventListener('pointermove', (e) => {
+				if (!dragging || e.pointerId !== pid) return;
+				const dy = startY - e.clientY;
+				if (!dragged && Math.abs(dy) > DRAG_THRESHOLD) {
+					dragged = true;
+					panel.style.transition = 'none';
+				}
+				if (dragged) {
+					const h = Math.min(Math.max(startH + dy, 56), window.innerHeight * 0.95);
+					panel.style.height = h + 'px';
+				}
+			});
+
+			function endDrag(e) {
+				if (!dragging || e.pointerId !== pid) return;
+				const wasDragged = dragged;
+				dragging = false; dragged = false;
+				try { handle.releasePointerCapture(pid); } catch (_) { }
+
+				if (wasDragged) {
+					panel.style.transition = '';
+					const h = panel.offsetHeight;
+					panel.style.height = '';  // hand control back to CSS
+					const vh = window.innerHeight;
+					if (h < vh * 0.2) setState('peek');
+					else if (h < vh * 0.75) setState('half');
+					else setState('full');
+				} else {
+					// plain tap: cycle
+					const s = panel.dataset.state;
+					setState(s === 'peek' ? 'half' : s === 'half' ? 'full' : 'peek');
+				}
+			}
+			handle.addEventListener('pointerup', endDrag);
+			handle.addEventListener('pointercancel', endDrag);
+
+			// Progress counter (2 selects + 7 likerts = 9 required)
+			function updateProgress() {
+				if (!progressEl) return;
+				const selects = form.querySelectorAll('select[required]');
+				const radioNames = new Set();
+				form.querySelectorAll('input[type="radio"][required]')
+					.forEach(el => radioNames.add(el.name));
+
+				let filled = 0;
+				selects.forEach(s => { if (s.value) filled++; });
+				radioNames.forEach(name => {
+					if (form.querySelector(`input[name="${CSS.escape(name)}"]:checked`)) filled++;
+				});
+				const total = selects.length + radioNames.size;
+				progressEl.textContent = `${filled} of ${total} answered`;
+			}
+			form.addEventListener('change', updateProgress);
+			updateProgress();
+
+			// Optional: duck the sheet while the chat composer has focus
+			if (messageInput) {
+				messageInput.addEventListener('focus', () => {
+					if (isMobile()) panel.classList.add('keyboard-hidden');
+				});
+				messageInput.addEventListener('blur', () => {
+					panel.classList.remove('keyboard-hidden');
+				});
+			}
+
+			// Reset when crossing the breakpoint
+			mq.addEventListener('change', () => {
+				setState('peek');
+				panel.style.height = '';
+				panel.classList.remove('keyboard-hidden');
 			});
 		})();
 	</script>

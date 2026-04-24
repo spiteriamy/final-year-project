@@ -160,64 +160,6 @@ themeToggleBtn.addEventListener('click', () => {
 // -----------------------------------------------------------------------------------------------
 // SIDEBAR
 
-// const sidebar = document.getElementById('sidebar');
-// const collapseBtn = document.getElementById('collapse-sidebar');
-// const expandBtn = document.getElementById('expand-sidebar');
-// const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-// const mobileBackdrop = document.getElementById('mobile-drawer-backdrop');
-
-// // Desktop collapse/expand
-// collapseBtn.addEventListener('click', () => {
-//   sidebar.classList.add('collapsed');
-//   expandBtn.classList.remove('hidden');
-// });
-
-// expandBtn.addEventListener('click', () => {
-//   sidebar.classList.remove('collapsed');
-//   expandBtn.classList.add('hidden');
-// });
-
-// // Mobile drawer open/close
-// function openMobileDrawer() {
-//   sidebar.classList.add('mobile-open');
-//   mobileBackdrop.classList.add('active');
-//   document.body.style.overflow = 'hidden';
-// }
-
-// function closeMobileDrawer() {
-//   sidebar.classList.remove('mobile-open');
-//   mobileBackdrop.classList.remove('active');
-//   document.body.style.overflow = '';
-// }
-
-// if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileDrawer);
-
-// // Use both click and touchstart on backdrop for reliable mobile close
-// if (mobileBackdrop) {
-//   mobileBackdrop.addEventListener('click', closeMobileDrawer);
-//   mobileBackdrop.addEventListener('touchstart', closeMobileDrawer, { passive: true });
-// }
-
-// // Close button inside the drawer (mobile only)
-// const mobileDrawerClose = document.getElementById('mobile-drawer-close');
-// if (mobileDrawerClose) {
-//   mobileDrawerClose.addEventListener('click', closeMobileDrawer);
-//   mobileDrawerClose.addEventListener('touchstart', closeMobileDrawer, { passive: true });
-// }
-
-// // Close drawer when a chat is selected on mobile
-// document.addEventListener('click', e => {
-//   const link = e.target.closest('#chat-list a');
-//   if (link && window.innerWidth < 768) closeMobileDrawer();
-// });
-
-// // New Chat - create a fresh entry and open it in a new browser tab
-// document.getElementById('new-chat-btn').addEventListener('click', () => {
-//   const newId = generateId();
-//   // window.open(`?chat=${newId}`, '_blank'); // open in new tab
-//   window.open(`?chat=${newId}`, '_self'); // open in same tab
-// });
-
 const sidebar = document.getElementById('sidebar');
 const collapseBtn = document.getElementById('collapse-sidebar');
 const expandBtn = document.getElementById('expand-sidebar');
@@ -232,7 +174,7 @@ const startCollapsed = stored === null ? true : stored === 'true';
 
 if (startCollapsed) {
   sidebar.classList.add('collapsed');
-  expandBtn.classList.remove('hidden');
+  if (window.innerWidth >= 768) expandBtn.classList.remove('hidden');
 } else {
   sidebar.classList.remove('collapsed');
   expandBtn.classList.add('hidden');
@@ -249,6 +191,58 @@ expandBtn.addEventListener('click', () => {
   sidebar.classList.remove('collapsed');
   expandBtn.classList.add('hidden');
   localStorage.setItem(SIDEBAR_STATE_KEY, 'false');
+});
+
+// -----------------------------------------------------------------------------------------------
+// MOBILE DRAWER
+
+function openMobileDrawer() {
+  sidebar.classList.add('mobile-open');
+  mobileBackdrop.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  // Close the feedback sheet if it's expanded, so the two don't fight
+  const panel = document.getElementById('survey-panel');
+  if (panel && panel.dataset.state !== 'peek') {
+    panel.dataset.state = 'peek';
+    document.getElementById('sheet-backdrop')?.classList.remove('active');
+  }
+}
+
+function closeMobileDrawer() {
+  sidebar.classList.remove('mobile-open');
+  mobileBackdrop.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+if (mobileMenuBtn) {
+  mobileMenuBtn.addEventListener('click', openMobileDrawer);
+}
+
+if (mobileBackdrop) {
+  mobileBackdrop.addEventListener('click', closeMobileDrawer);
+  mobileBackdrop.addEventListener('touchstart', closeMobileDrawer, { passive: true });
+}
+
+// Close button inside the drawer (mobile only)
+const mobileDrawerClose = document.getElementById('mobile-drawer-close');
+if (mobileDrawerClose) {
+  mobileDrawerClose.addEventListener('click', closeMobileDrawer);
+  mobileDrawerClose.addEventListener('touchstart', closeMobileDrawer, { passive: true });
+}
+
+// Close drawer when a chat is selected on mobile
+document.addEventListener('click', e => {
+  const link = e.target.closest('#chat-list a');
+  if (link && window.innerWidth < 768) closeMobileDrawer();
+});
+
+// New Chat — create a fresh entry and open it
+document.getElementById('new-chat-btn').addEventListener('click', () => {
+  const newId = generateId();
+  window.open(`?chat=${newId}`, '_self');
+  // On mobile, also collapse the drawer
+  if (window.innerWidth < 768) closeMobileDrawer();
 });
 
 
@@ -346,7 +340,7 @@ async function sendMessage() {
     updateChatTitle(text); // also calls renderSidebarChats internally
     isFirstMessage = false;
   } else if (isNew) {
-    // Chat was saved before (e.g. welcome message) but never registered — sync sidebar now
+    // Chat was saved before (e.g. welcome message) but never registered - sync sidebar now
     renderSidebarChats();
   }
 
@@ -480,10 +474,6 @@ document.getElementById('share-modal-cancel').addEventListener('click', closeSha
 document.getElementById('share-modal-download').addEventListener('click', downloadJSON);
 document.getElementById('share-backdrop').addEventListener('click', closeShareModal);
 
-// Close on Escape key
-// document.addEventListener('keydown', e => {
-//   if (e.key === 'Escape') closeShareModal();
-// });
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
@@ -549,12 +539,12 @@ document.getElementById('menu-delete').addEventListener('click', () => {
 // -----------------------------------------------------------------------------------------------
 // SURVEY
 
-feedbackBtn = document.getElementById('feedback-btn');
+// feedbackBtn = document.getElementById('feedback-btn');
 
-// redirect to survey page with session ID as query parameter
-feedbackBtn.addEventListener('click', () => {
-  window.location.href = `survey?sid=${SESSION_ID}`;
-});
+// // redirect to survey page with session ID as query parameter
+// feedbackBtn.addEventListener('click', () => {
+//   window.location.href = `survey?sid=${SESSION_ID}`;
+// });
 
 
 // -----------------------------------------------------------------------------------------------
