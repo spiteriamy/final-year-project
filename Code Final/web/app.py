@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 import os
-from models.inference import MorphologicalAnalyserService, IntentClassifierService
+from model_definitions.inference import MorphologicalAnalyserService, IntentClassifierService
 import re
 from nltk.corpus import words
 import json

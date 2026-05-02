@@ -3,6 +3,7 @@ from typing import Dict, Optional, Union
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from transformers import PreTrainedConfig, PreTrainedModel, AutoModel, PreTrainedTokenizerBase
 from transformers.modeling_outputs import ModelOutput
 
@@ -261,4 +262,120 @@ class MultiLabelDataCollator:
 
         return batch
 
+
+
+
+# inference wrapper function
+
+def predict_with_confidence(
+    sentence_words, model, tokenizer, device,
+    id2label_all, pos_mask_tensor, thresholds=None,
+):
+    """
+    Predict morphological features with confidence scores and fallback flags.
+
+    Args:
+        sentence_words: list of word strings
+        model, tokenizer, device: as usual
+        id2label_all: label vocabularies
+        pos_mask_tensor: POS-feature compatibility mask
+        feature_order: list of feature names
+        thresholds: dict[feat] -> float threshold, or single float for all.
+                    If None, no thresholding (all predictions accepted).
+
+    Returns:
+        list of dicts, one per word. Each dict contains:
+          - "word": the input word
+          - "pos": {"label": str, "confidence": float, "needs_fallback": bool}
+          - "person": {"label": str, "confidence": float, "needs_fallback": bool}
+          - ... (for each applicable feature)
+          - features not applicable for the predicted POS get:
+            {"label": "—", "confidence": None, "needs_fallback": False, "applicable": False}
+    """
+    model.eval()
+    words_lower = [w.lower() for w in sentence_words]
+
+    encoding = tokenizer(
+        words_lower,
+        is_split_into_words=True,
+        return_tensors="pt",
+        truncation=True,
+        max_length=128,
+    ).to(device)
+
+    word_ids = encoding.word_ids(batch_index=0)
+
+    with torch.no_grad():
+        output = model(**encoding)
+
+    pos_logits = output.logits[0]               # (seq_len, num_pos)
+    feature_logits = output.feature_logits
+
+
+    pos_probs = F.softmax(pos_logits, dim=-1)
+    pos_conf, pos_pred = pos_probs.max(dim=-1)
+
+    # Determine thresholds
+    if thresholds is None:
+        thresholds = {}
+    elif isinstance(thresholds, (int, float)):
+        t = float(thresholds)
+        thresholds = {feat: t for feat in ["pos"] + FEATURE_ORDER}
+
+    results = []
+    seen = set()
+
+    for token_idx, word_id in enumerate(word_ids):
+        if word_id is None or word_id in seen:
+            continue
+        seen.add(word_id)
+
+        pos_idx = pos_pred[token_idx].item()
+        pos_confidence = pos_conf[token_idx].item()
+        pos_str = id2label_all["pos"][pos_idx]
+        pos_threshold = thresholds.get("pos", 0.0)
+
+        result = {
+            "word": sentence_words[word_id],
+            "pos": {
+                "label": pos_str,
+                "confidence": round(pos_confidence, 4),
+                "needs_fallback": pos_confidence < pos_threshold,
+                "probabilities": {id2label_all["pos"][i]: round(p, 4)
+                                  for i, p in enumerate(pos_probs[token_idx].cpu().tolist())
+                                  if p > 0.01},  # only show probs > 1%
+            },
+        }
+
+        for feat_idx, feat in enumerate(FEATURE_ORDER):
+            if pos_mask_tensor[pos_idx, feat_idx].item():
+                feat_logit = feature_logits[feat][0, token_idx]  # (num_labels,)
+
+
+                feat_probs = F.softmax(feat_logit, dim=-1)
+                feat_conf, feat_pred_idx = feat_probs.max(dim=-1)
+
+                feat_confidence = feat_conf.item()
+                feat_threshold = thresholds.get(feat, 0.0)
+
+                result[feat] = {
+                    "label": id2label_all[feat][feat_pred_idx.item()],
+                    "confidence": round(feat_confidence, 4),
+                    "needs_fallback": feat_confidence < feat_threshold,
+                    "applicable": True,
+                    "probabilities": {id2label_all[feat][i]: round(p, 4)
+                                      for i, p in enumerate(feat_probs.cpu().tolist())
+                                      if p > 0.01},
+                }
+            else:
+                result[feat] = {
+                    "label": "—",
+                    "confidence": None,
+                    "needs_fallback": False,
+                    "applicable": False,
+                }
+
+        results.append(result)
+
+    return results
 
