@@ -166,6 +166,22 @@ html:not(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
     background: #cccccc;
 }
 
+/* Text */
+html:not(.dark) .text-zinc-300 {
+    color: #1a1a1a !important;
+}
+
+/* Backgrounds — example prompt rows */
+html:not(.dark) .bg-zinc-900\/30 {
+    background-color: #f4f4f4 !important;
+}
+
+/* Borders — info cards and example prompts */
+html:not(.dark) .border-zinc-800\/40,
+html:not(.dark) .border-zinc-800\/60 {
+    border-color: #e5e5e5 !important;
+}
+
 /*  */
 
 
