@@ -69,13 +69,13 @@ POS_FEATURE_MASK = {
     "Ma": [False, True,  False, False, False, True,  True,  False ],  # cardinal numeral
     "Mo": [False, True,  False, False, False, True,  True,  False ],  # ordinal numeral
     "N-": [False, False, False, False, False, False, False, False ],  # infinitive marker
-    "Nb": [False, True,  False, False, False, True,  True,  False ],  # common noun
-    "Ne": [False, True,  False, False, False, True,  True,  False ],  # proper noun
-    "Pc": [False, True,  False, False, False, True,  True,  False ],  # reciprocal pronoun
+    "Nb": [False, True,  False, False, False, True,  True,  False ],  # common noun                         +
+    "Ne": [False, True,  False, False, False, True,  True,  False ],  # proper noun                         +
+    "Pc": [False, True,  False, False, False, True,  True,  False ],  # reciprocal pronoun                  +
     "Pd": [False, True,  False, False, False, True,  True,  False ],  # demonstrative pronoun
     "Pi": [False, True,  False, False, False, True,  True,  False ],  # interrogative pronoun
     "Pk": [False, True,  False, False, False, True,  True,  False ],  # personal reflexive pronoun
-    "Pp": [False, True,  False, False, False, True,  True,  False ],  # personal pronoun
+    "Pp": [True,  True,  False, False, False, True,  True,  False ],  # personal pronoun                    +
     "Pr": [False, True,  False, False, False, True,  True,  False ],  # relative pronoun
     "Ps": [False, True,  False, False, False, True,  True,  False ],  # possessive pronoun
     "Pt": [False, True,  False, False, False, True,  True,  False ],  # possessive reflexive pronoun
@@ -83,7 +83,7 @@ POS_FEATURE_MASK = {
     "Py": [False, False, False, False, False, False, False, False ],  # quantifier
     "R-": [False, False, False, False, False, False, False, False ],  # preposition
     "S-": [False, False, False, False, False, False, False, False ],  # article
-    "V-": [True,  True,  True,  True,  True,  False, False, False ],  # verb
-    "X-": [False, False, False, False, False, False, False, False ]   # unassigned
+    "V-": [True,  True,  True,  True,  True,  False, False, False ],  # verb                                +
+    "X-": [False, False, False, False, False, False, False, False ]   # unassigned                          +
 }
 
