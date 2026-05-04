@@ -1,5 +1,11 @@
 # Project Code
 
+From root directory run:
+
+```bash
+ python -m web.app
+```
+
 ## Directory Structure
 
 ```

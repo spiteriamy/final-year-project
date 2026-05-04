@@ -11,7 +11,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 from safetensors.torch import load_file
-from morphological_analyser import LatinMorphologicalAnalyser, LatinMorphologicalAnalyserConfig, predict_with_confidence
+from .morphological_analyser import LatinMorphologicalAnalyser, LatinMorphologicalAnalyserConfig, predict_with_confidence
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 

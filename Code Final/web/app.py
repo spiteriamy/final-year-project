@@ -5,7 +5,7 @@ import re
 from nltk.corpus import words
 import json
 import sqlite3
-from database import init_db
+from .database import init_db
 from datetime import datetime
 from pathlib import Path
 
@@ -17,7 +17,7 @@ DB_PATH = Path("survey_responses.db")
 init_db(DB_PATH)  # run once at import time
 
 # Load response templates once at startup
-with open("response_templates.json", "r", encoding="utf-8") as f:
+with open(os.path.join("web", "response_templates.json"), "r", encoding="utf-8") as f:
     RESPONSE_TEMPLATES = json.load(f)
 
 # Map intent labels -> morphology feature keys
@@ -33,11 +33,29 @@ INTENT_TO_FEATURE = {
     # aspect / declension / conjugation: not produced by the analyser yet
 }
 
+# feature to readable name mapping for user-facing messages
+FEATURE_MAPPINGS = {
+    "Abl": "ablative", "Acc": "accusative", "Dat": "dative", "Gen": "genitive", "Nom": "nominative", "Voc": "vocative",
+    "Comp": "comparative", "Pos": "positive", "Sup": "superlative",
+    "Fem": "feminine", "FemNeut": "feminine or neuter", "Masc": "masculine", "MascFem": "masculine or feminine", "MascFemNeut": "masculine or feminine or neuter", "MascNeut": "masculine or neuter", "Neut": "neuter",
+    "Gdv": "gerundive", "Ger": "gerund", "Imp": "imperative", "Ind": "indicative", "Inf": "infintive", "Part": "participle", "Sub": "subjunctive", "Sup": "supine",
+    "Plur": "plural", "Sing": "singular",
+    "1": "1st", "2": "2nd", "3": "3rd",
+    "A-": "adjective", "C-": "conjunction", "Df": "adverb", "Dq": "relative adverb", "Du": "interrogative adverb",
+    "F-": "foreign word", "G-": "subjunction", "I-": "interjection", "Ma": "cardinal numeral", "Mo": "ordinal numeral",
+    "Nb": "common noun", "Ne": "proper noun", "Pc": "reciprocal pronoun", "Pd": "demonstrative pronoun", "Pi": "interrogative pronoun",
+    "Pk": "personal reflexive pronoun", "Pp": "personal pronoun", "Pr": "relative pronoun", "Ps": "possessive pronoun",
+    "Pt": "possessive reflexive pronoun", "Px": "indefinite pronoun", "R-": "preposition", "V-": "verb",
+    "Fut": "future", "FutPerf": "future perfect", "Imp": "imperfect", "Perf": "perfect", "Plup": "pluperfect", "Pres": "present",
+    "Act": "active", "Pass": "passive"
+}
+
+
 # Load models once at startup
 
 print("Loading models...")
 
-intent_classifier = IntentClassifierService(model_path=os.path.join("saved_models", "intent_classifier"))
+intent_classifier = IntentClassifierService(model_path=os.path.join("model_weights", "intent_classifier"))
 
 
 my_thresholds = {
@@ -53,8 +71,8 @@ my_thresholds = {
 }
 
 morphological_analyser = MorphologicalAnalyserService(
-    model_path=os.path.join("saved_models", "morphological_analyser"),
-    bert_path=os.path.join("saved_models", "latin_bert"),
+    model_path=os.path.join("model_weights", "morphological_analyser"),
+    bert_path=os.path.join("model_weights", "latin_bert"),
     thresholds=my_thresholds
 )
 
@@ -141,7 +159,8 @@ def get_response(user_input):
     # (here is where i would fall back to the database)
     if feature_data.get("needs_fallback"):
         pretty = intent.replace("_", " ")
-        return (f"I'm not confident about the {pretty} of '{latin_word}'. It might be a {feature_data['label']}, but I'm not sure.")
+        label = FEATURE_MAPPINGS.get(feature_data['label'], feature_data['label'])
+        return (f"I'm not confident about the {pretty} of '{latin_word}'. It might be a {label}, but I'm not sure.")
 
     # step 4: get response template for this intent
     template = RESPONSE_TEMPLATES["intents"][intent]["templates"][0]
@@ -149,14 +168,14 @@ def get_response(user_input):
     # step 5: fill in template with word + required morphological feature
     slot_values = {
         "WORD":           latin_word,
-        "PART_OF_SPEECH": analysis["pos"]["label"],
-        "PERSON":         analysis["person"]["label"],
-        "MOOD":           analysis["mood"]["label"],
-        "TENSE":          analysis["tense"]["label"],
-        "VOICE":          analysis["voice"]["label"],
-        "NUMBER":         analysis["number"]["label"],
-        "CASE":           analysis["case"]["label"],
-        "GENDER":         analysis["gender"]["label"],
+        "PART_OF_SPEECH": FEATURE_MAPPINGS.get(analysis["pos"]["label"], analysis["pos"]["label"]),
+        "PERSON":         FEATURE_MAPPINGS.get(analysis["person"]["label"], analysis["person"]["label"]),
+        "MOOD":           FEATURE_MAPPINGS.get(analysis["mood"]["label"], analysis["mood"]["label"]),
+        "TENSE":          FEATURE_MAPPINGS.get(analysis["tense"]["label"], analysis["tense"]["label"]),
+        "VOICE":          FEATURE_MAPPINGS.get(analysis["voice"]["label"], analysis["voice"]["label"]),
+        "NUMBER":         FEATURE_MAPPINGS.get(analysis["number"]["label"], analysis["number"]["label"]),
+        "CASE":           FEATURE_MAPPINGS.get(analysis["case"]["label"], analysis["case"]["label"]),
+        "GENDER":         FEATURE_MAPPINGS.get(analysis["gender"]["label"], analysis["gender"]["label"]),
     }
 
     response = template["text"]
@@ -182,11 +201,7 @@ def index():
 
 @app.route("/chatbot")
 def chatbot():
-    return render_template("index_survey.html")
-
-@app.route("/survey")
-def survey():
-    return render_template("survey.html")
+    return render_template("index.html")
     
 @app.route("/chat", methods=["POST"])
 def chat():

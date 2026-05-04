@@ -4,10 +4,10 @@ from typing import Dict, Optional, Union
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from transformers import PreTrainedConfig, PreTrainedModel, AutoModel, PreTrainedTokenizerBase
+from transformers import PreTrainedConfig, PreTrainedModel, AutoModel, PreTrainedTokenizerBase, BertModel
 from transformers.modeling_outputs import ModelOutput
 
-from morph_constants import FEATURE_ORDER, IGNORE_INDEX
+from .morph_constants import FEATURE_ORDER, IGNORE_INDEX
 
 
 # Multi-head model definition:
@@ -87,12 +87,13 @@ class LatinMorphologicalAnalyser(PreTrainedModel):
   '''
   '''
   config_class = LatinMorphologicalAnalyserConfig
-  base_model_prefix = "bert"##
+#   base_model_prefix = "bert"##
 
   def __init__(self, config):
     super().__init__(config)
-
-    self.bert = AutoModel.from_pretrained(config.bert_model_path) # load the pretrained latin bert weihhts
+    
+    # self.bert = AutoModel.from_pretrained(config.bert_model_path) # load the pretrained latin bert weihhts
+    self.bert = BertModel.from_pretrained(config.bert_model_path)
 
     hidden = self.bert.config.hidden_size # hidden layer number of input neruons
 
