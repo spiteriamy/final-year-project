@@ -5,7 +5,7 @@ import re
 from nltk.corpus import words
 import json
 import sqlite3
-from .database import init_db
+from database import init_db
 from datetime import datetime
 from pathlib import Path
 
@@ -17,7 +17,7 @@ DB_PATH = Path("survey_responses.db")
 init_db(DB_PATH)  # run once at import time
 
 # Load response templates once at startup
-with open(os.path.join("web", "response_templates.json"), "r", encoding="utf-8") as f:
+with open(os.path.join("response_templates.json"), "r", encoding="utf-8") as f:
     RESPONSE_TEMPLATES = json.load(f)
 
 # Map intent labels -> morphology feature keys
