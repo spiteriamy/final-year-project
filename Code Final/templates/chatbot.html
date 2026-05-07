@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+	<title>Talk2MeLatin</title>
+
+	<!-- Apply saved theme before first paint to prevent flash -->
+	<script>
+		(function () {
+			const saved = localStorage.getItem('theme');
+			// Default to dark if nothing saved yet
+			if (saved === 'light') {
+				document.documentElement.classList.remove('dark');
+			} else {
+				document.documentElement.classList.add('dark');
+			}
+		})();
+	</script>
+
+	<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+	<!-- fonts -->
+	<link
+		href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
+		rel="stylesheet" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+		rel="stylesheet" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+		rel="stylesheet" />
+
+	<script id="tailwind-config">
+		tailwind.config = {
+			darkMode: "class",
+			theme: {
+				extend: {
+					colors: {
+						"on-surface": "#e7e4ec",
+						"on-surface-variant": "#acaab1",
+						"secondary-fixed": "#e2e1eb",
+						"secondary-fixed-dim": "#d4d3dd",
+						"on-tertiary": "#5f5e66",
+						"inverse-surface": "#fcf8fb",
+						"on-primary-container": "#d0d0d0",
+						"error-container": "#7f2927",
+						"on-secondary-fixed": "#3e3f46",
+						"tertiary-container": "#eceaf3",
+						"tertiary-fixed": "#efedf6",
+						"primary-fixed-dim": "#d4d3dd",
+						"outline-variant": "#47474e",
+						"on-background": "#e7e4ec",
+						"secondary-container": "#3a3b42",
+						"primary-dim": "#b8b9b9",
+						"error-dim": "#bb5551",
+						"on-secondary-fixed-variant": "#5a5b63",
+						"tertiary-fixed-dim": "#e1dee7",
+						"secondary": "#9d9da6",
+						"secondary-dim": "#9d9da6",
+						"on-error": "#490106",
+						"on-tertiary-container": "#56565d",
+						"on-primary": "#3f4041",
+						"on-primary-fixed-variant": "#5a5c5c",
+						"surface-dim": "#0e0e10",
+						"outline": "#75757c",
+						"on-secondary": "#1e2027",
+						"surface": "#0e0e10",
+						"surface-bright": "#2b2c32",
+						"on-tertiary-fixed-variant": "#626269",
+						"tertiary": "#fbf8ff",
+						"surface-container": "#19191d",
+						"primary": "#c6c6c7",
+						"surface-tint": "#c6c6c7",
+						"inverse-on-surface": "#565457",
+						"primary-fixed": "#e2e2e2",
+						"surface-variant": "#25252b",
+						"on-error-container": "#ff9993",
+						"surface-container-high": "#1f1f24",
+						"tertiary-dim": "#e1dee7",
+						"surface-container-low": "#131316",
+						"inverse-primary": "#5e5f60",
+						"surface-container-highest": "#25252b",
+						"primary-container": "#454747",
+						"on-secondary-container": "#bfbec8",
+						"on-primary-fixed": "#3e4040",
+						"surface-container-lowest": "#000000",
+						"error": "#ee7d77",
+						"on-tertiary-fixed": "#46464d",
+						"background": "#0e0e10"
+					},
+					fontFamily: {
+						"headline": ["Manrope"],
+						"body": ["Inter"],
+						"label": ["Inter"]
+					},
+					borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+				},
+			},
+		}
+	</script>
+
+	<!-- icon -->
+	<link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='icon.svg') }}">
+
+	<link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
+
+	<style>
+		/* ========== Survey panel styles ========== */
+
+		/* Likert radio row — compact for narrow sidebar */
+		.likert-row {
+			display: grid;
+			grid-template-columns: repeat(5, 1fr);
+			gap: 0.35rem;
+		}
+
+		.likert-row input[type="radio"] {
+			display: none;
+		}
+
+		.likert-row label {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 0.5rem 0.25rem;
+			border-radius: 0.5rem;
+			background: rgba(39, 39, 42, 0.5);
+			border: 1px solid rgba(63, 63, 70, 0.5);
+			cursor: pointer;
+			font-size: 0.75rem;
+			text-align: center;
+			transition: all 0.15s ease;
+			color: #a1a1aa;
+			line-height: 1.2;
+		}
+
+		.likert-row label:hover {
+			background: rgba(63, 63, 70, 0.6);
+			color: #e7e4ec;
+		}
+
+		.likert-row input[type="radio"]:checked+label {
+			background: #2a2a2a;
+			border-color: #52525b;
+			color: #ffffff;
+			font-weight: 600;
+		}
+
+		html:not(.dark) .likert-row label {
+			background: #f0f0f0;
+			border-color: #d4d4d4;
+			color: #4a4a4a;
+		}
+
+		html:not(.dark) .likert-row label:hover {
+			background: #e5e5e5;
+		}
+
+		html:not(.dark) .likert-row input[type="radio"]:checked+label {
+			background: #2a2a2a;
+			border-color: #2a2a2a;
+			color: #ffffff;
+		}
+
+		/* Form field base styling — scoped to survey panel */
+		#survey-panel textarea,
+		#survey-panel select {
+			background: rgba(39, 39, 42, 0.4);
+			border: 1px solid rgba(63, 63, 70, 0.5);
+			border-radius: 0.5rem;
+			padding: 0.6rem 0.75rem;
+			color: #e7e4ec;
+			width: 100%;
+			font-family: inherit;
+			font-size: 0.85rem;
+			transition: border-color 0.15s ease;
+		}
+
+		#survey-panel textarea:focus,
+		#survey-panel select:focus {
+			outline: none;
+			border-color: #71717a;
+		}
+
+		html:not(.dark) #survey-panel textarea,
+		html:not(.dark) #survey-panel select {
+			background: #ffffff;
+			border-color: #d4d4d4;
+			color: #121212;
+		}
+
+		html:not(.dark) #survey-panel textarea:focus,
+		html:not(.dark) #survey-panel select:focus {
+			border-color: #2a2a2a;
+		}
+	</style>
+</head>
+
+<body class="font-body selection:bg-primary-container selection:text-on-primary-container">
+	<div class="flex h-screen w-full overflow-hidden">
+
+		<!-- SideNavBar Component -->
+		<aside
+			class="flex flex-col h-full bg-zinc-900/50 dark:bg-[#131316] w-64 border-r-0 font-manrope text-sm tracking-tight transition-all duration-300 ease-in-out"
+			id="sidebar">
+
+			<!-- Header Section -->
+			<div class="p-6 flex flex-col flex-1 min-h-0">
+				<div class="flex justify-between items-center mb-4">
+					<!-- Close button — mobile only -->
+					<button id="mobile-drawer-close"
+						class="md:hidden p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
+						<span class="material-symbols-outlined">close</span>
+					</button>
+					<!-- Collapse button — desktop only -->
+					<button
+						class="hidden md:flex p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400 group ml-auto"
+						id="collapse-sidebar">
+						<span class="material-symbols-outlined transition-transform group-hover:-translate-x-0.5"
+							data-icon="chevron_left">chevron_left</span>
+					</button>
+				</div>
+				<div class="flex items-center gap-3 mb-8">
+					<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center">
+						<span class="material-symbols-outlined text-on-primary-container text-lg">account_balance</span>
+					</div>
+					<div>
+						<h1 class="text-lg font-bold tracking-tighter text-zinc-100 dark:text-[#c6c6c7]">Talk2MeLatin
+						</h1>
+						<p class="text-[8px] text-zinc-500 dark:text-[#47474e] uppercase tracking-[0.2em]">Latin Grammar
+							Assistant</p>
+					</div>
+				</div>
+
+				<!-- New Chat Button -->
+				<button id="new-chat-btn"
+					class="w-full flex items-center justify-center gap-2 py-2.5 mb-6 bg-zinc-800 dark:bg-[#19191d] text-zinc-100 dark:text-[#c6c6c7] font-semibold rounded-md hover:bg-zinc-800/50 dark:hover:bg-[#19191d]/50 transition-colors">
+					<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+					<span>New Chat</span>
+				</button>
+
+				<!-- Dynamic Conversation List -->
+				<nav class="flex flex-col flex-1 min-h-0">
+					<div
+						class="text-[10px] font-bold text-zinc-500 dark:text-[#47474e] uppercase tracking-widest px-3 mb-3 flex-shrink-0">
+						Conversations
+					</div>
+					<!-- Scrollable chat list -->
+					<div id="chat-list" class="space-y-0.5 overflow-y-auto flex-1 custom-scrollbar"></div>
+				</nav>
+
+				<!-- Bottom nav links -->
+				<!-- <nav class="space-y-1 mt-4 pt-4 border-t border-surface-variant flex-shrink-0">
+					<a class="flex items-center gap-3 px-3 py-2 text-zinc-500 dark:text-[#47474e] hover:bg-zinc-800/50 dark:hover:bg-[#19191d]/50 transition-colors rounded-md"
+						href="#" id="feedback-btn">
+						<span class="material-symbols-outlined" data-icon="chat">chat</span>
+						<span>Feedback</span>
+					</a>
+				</nav> -->
+			</div>
+
+		</aside>
+
+		<!-- Main Content Canvas -->
+		<main class="flex-1 flex flex-col h-full bg-surface relative overflow-hidden">
+
+			<!-- TopNavBar Component -->
+			<header
+				class="flex justify-between items-center px-3 h-16 w-full max-w-none docked full-width top-0 z-50 bg-zinc-950/60 dark:bg-[#0e0e10]/60 backdrop-blur-md font-manrope font-medium">
+
+				<div class="flex items-center gap-4">
+					<button id="mobile-menu-btn"
+						class="md:hidden p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
+						<span class="material-symbols-outlined" style="font-size:22px; display:block;">menu</span>
+					</button>
+					<button class="hidden p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400"
+						id="expand-sidebar">
+						<span class="material-symbols-outlined" style="font-size:22px; display:block;">menu</span>
+					</button>
+					<span class="text-xl font-bold tracking-tight dark:text-[#c6c6c7]">Talk2MeLatin</span>
+				</div>
+
+				<div class="flex items-center gap-4">
+					<!-- Light/Dark Theme Toggle -->
+					<button class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400"
+						id="theme-toggle">
+						<span class="material-symbols-outlined" style="font-size:22px; display:block;"
+							id="theme-icon">light_mode</span>
+					</button>
+
+					<!-- Share Button -->
+					<button id="share-btn"
+						class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400 flex items-end gap-1.5">
+						<span class="material-symbols-outlined" style="font-size:22px; display:block;">download</span>
+					</button>
+
+					<!-- More Options Button -->
+					<div class="relative">
+						<button id="more-btn"
+							class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400">
+							<span class="material-symbols-outlined"
+								style="font-size:22px; display:block;">more_vert</span>
+						</button>
+						<!-- Dropdown menu -->
+						<div id="more-menu"
+							class="hidden absolute right-0 top-full mt-2 w-48 bg-surface-container-high rounded-lg border border-surface-variant shadow-2xl overflow-hidden z-50">
+							<button id="menu-rename"
+								class="w-full flex items-center gap-3 px-4 py-3 text-sm text-on-surface hover:bg-surface-variant transition-colors">
+								<span class="material-symbols-outlined" style="font-size:18px">edit</span>
+								Rename
+							</button>
+							<button id="menu-delete"
+								class="w-full flex items-center gap-3 px-4 py-3 text-sm text-error hover:bg-surface-variant transition-colors">
+								<span class="material-symbols-outlined" style="font-size:18px">delete</span>
+								Delete
+							</button>
+						</div>
+					</div>
+				</div>
+
+			</header>
+
+			<!-- Chat Stream -->
+			<div class="flex-1 overflow-y-auto custom-scrollbar px-6 md:px-2" id="chat-scroll">
+				<div class="max-w-4xl mx-auto py-12 space-y-12" id="messages">
+
+				</div>
+			</div> <!-- End of chat/messages area -->
+
+			<!-- Composer (Input Area) -->
+			<div class="w-full bg-surface pb-8 pt-4 px-6">
+				<div class="max-w-4xl mx-auto relative group">
+					<div
+						class="absolute inset-0 bg-primary/5 blur-2xl rounded-full opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none">
+					</div>
+
+					<!-- Message Input Area -->
+					<div
+						class="relative bg-surface-container-high rounded-xl border-b-2 border-surface-container-high focus-within:border-primary transition-all duration-300">
+
+						<!-- user input text box -->
+						<textarea
+							class="w-full bg-transparent border-none focus:ring-0 p-6 pr-16 text-on-surface placeholder:text-outline resize-none min-h-[64px] max-h-[200px] font-body text-lg"
+							id="message-input" placeholder="Message..." rows="1"></textarea>
+
+						<div class="absolute right-4 bottom-4 flex items-center gap-2">
+							<!-- send message button -->
+							<button id="send-btn"
+								class="bg-surface-bright text-on-surface p-2.5 rounded-lg hover:opacity-80 transition-opacity flex items-center justify-center">
+								<span class="material-symbols-outlined font-bold text-sm" data-icon="arrow_upward"
+									style="font-variation-settings: 'wght' 700;">arrow_upward</span>
+							</button>
+						</div>
+					</div>
+
+					<!-- Text under textarea -->
+					<div id="composer-footer"
+						class="mt-3 flex justify-center items-center gap-6 text-[8px] text-outline uppercase tracking-widest">
+						<span class="flex items-center gap-1.5">
+							<span class="w-1 h-1 rounded-full bg-primary/50"></span>
+							B.Sc. IT (Hons.) Artificial Intelligence
+						</span>
+						<span class="flex items-center gap-1.5">
+							<span class="w-1 h-1 rounded-full bg-primary/50"></span>
+							Department of Artificial Intelligence, University of Malta
+						</span>
+					</div>
+
+				</div>
+			</div>
+
+		</main>
+
+		<!-- Survey side panel: desktop right-column, mobile bottom sheet -->
+		<aside
+			class="flex flex-col md:h-full bg-zinc-50/50 dark:bg-[#131316] md:w-96 md:border-l md:border-surface-variant font-manrope text-sm tracking-tight md:flex-shrink-0"
+			id="survey-panel" data-state="peek">
+
+			<!-- Drag handle — mobile only -->
+			<button type="button" id="sheet-handle"
+				class="md:hidden flex items-center justify-center pt-2 pb-1 flex-shrink-0"
+				aria-label="Drag to resize feedback panel">
+				<div class="w-9 h-1 bg-zinc-600 dark:bg-[#47474e] rounded-full pointer-events-none"></div>
+			</button>
+
+			<!-- Panel header (stays pinned while form scrolls, tap to toggle on mobile) -->
+			<div id="sheet-header"
+				class="flex items-center justify-between gap-3 px-6 py-4 md:py-5 border-b border-surface-variant flex-shrink-0 cursor-pointer md:cursor-default select-none">
+				<div class="flex-1 min-w-0">
+					<h2 class="text-base font-extrabold tracking-tighter text-zinc-100 dark:text-[#c6c6c7]">Your
+						feedback</h2>
+					<!-- Desktop subtitle -->
+					<p class="hidden md:block text-[9px] text-zinc-500 dark:text-[#47474e] tracking-[0.2em]">
+						Thank you for participating in this evaluation.
+						Please answer a few short questions about your experience.
+					</p>
+					<!-- Mobile progress -->
+					<p class="md:hidden text-[10px] text-outline mt-1 tracking-wide" id="peek-progress">0 of 9 answered
+					</p>
+				</div>
+				<span class="md:hidden material-symbols-outlined text-zinc-400 transition-transform duration-200"
+					id="sheet-chevron" style="font-size:22px;">keyboard_arrow_up</span>
+			</div>
+
+			<!-- Scrollable content -->
+			<div class="flex-1 overflow-y-auto custom-scrollbar px-6 py-6" id="sheet-body">
+
+				<form id="survey-form" class="space-y-6">
+
+					<!-- About you -->
+					<section class="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800/60">
+						<h3
+							class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-[#47474e] mb-4">
+							About you
+						</h3>
+						<div class="space-y-4">
+							<div>
+								<label class="block text-xs mb-2 text-on-surface-variant">How would you describe your
+									level of Latin?</label>
+								<select name="latin_level" required>
+									<option value="">Select one...</option>
+									<option value="none">No prior experience</option>
+									<option value="beginner">Beginner</option>
+									<option value="intermediate">Intermediate</option>
+									<option value="advanced">Advanced</option>
+									<option value="fluent">Fluent / professional</option>
+								</select>
+							</div>
+							<div>
+								<label class="block text-xs mb-2 text-on-surface-variant">How often do you use AI
+									chatbots (e.g. ChatGPT, Claude)?</label>
+								<select name="ai_familiarity" required>
+									<option value="">Select one...</option>
+									<option value="never">Never</option>
+									<option value="rarely">Rarely</option>
+									<option value="sometimes">Sometimes</option>
+									<option value="often">Often</option>
+									<option value="daily">Daily</option>
+								</select>
+							</div>
+						</div>
+					</section>
+
+					<!-- Likert -->
+					<section class="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800/60">
+						<h3
+							class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-[#47474e] mb-1">
+							Your experience
+						</h3>
+						<p class="text-[11px] text-outline mb-4">1 = Strongly disagree · 2 = Disagree · 3 = Neutral · 4
+							= Agree · 5 = Strongly agree</p>
+
+						<div class="space-y-5">
+							{% set questions = [
+							('easy_to_use', 'The chatbot was easy to use and navigate.'),
+							('understood_questions', 'The chatbot understood what I was asking.'),
+							('answers_accurate', 'The answers I received seemed accurate.'),
+							('answers_helpful', 'The answers I received were helpful for my learning.'),
+							('enjoyed_using', 'I enjoyed using the chatbot to practice Latin.'),
+							('increased_interest', 'Using the chatbot increased my interest in learning Latin.'),
+							('would_recommend', 'I would recommend this tool to other Latin learners.')
+							] %}
+							{% for name, text in questions %}
+							<div>
+								<p class="text-xs mb-2 text-on-surface-variant leading-relaxed">{{ text }}</p>
+								<div class="likert-row">
+									{% for n in range(1, 6) %}
+									<input type="radio" id="sp_{{ name }}_{{ n }}" name="{{ name }}" value="{{ n }}"
+										required />
+									<label for="sp_{{ name }}_{{ n }}">{{ n }}</label>
+									{% endfor %}
+								</div>
+							</div>
+							{% endfor %}
+						</div>
+					</section>
+
+					<!-- Open feedback -->
+					<section class="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800/60">
+						<h3
+							class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-[#47474e] mb-4">
+							Open feedback
+						</h3>
+						<div class="space-y-4">
+							<div>
+								<label class="block text-xs mb-2 text-on-surface-variant">What did you like
+									most?</label>
+								<textarea name="liked_most" rows="3" placeholder="Optional"></textarea>
+							</div>
+							<div>
+								<label class="block text-xs mb-2 text-on-surface-variant">What could be
+									improved?</label>
+								<textarea name="improvements" rows="3" placeholder="Optional"></textarea>
+							</div>
+							<div>
+								<label class="block text-xs mb-2 text-on-surface-variant">Anything else you'd like to
+									add?</label>
+								<textarea name="other" rows="3" placeholder="Optional"></textarea>
+							</div>
+						</div>
+					</section>
+
+					<!-- Submit -->
+					<div class="flex flex-col items-center gap-2 pt-1">
+						<button type="submit"
+							class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-primary-container text-on-primary-container font-semibold text-sm hover:opacity-90 transition-opacity">
+							Submit feedback
+							<span class="material-symbols-outlined" style="font-size: 18px;">check</span>
+						</button>
+						<p class="text-[10px] text-outline text-center">Your responses will be used for research
+							purposes only.</p>
+					</div>
+
+				</form>
+
+				<!-- Thank-you state (hidden by default) -->
+				<div id="survey-thankyou" class="hidden text-center py-12">
+					<div
+						class="w-12 h-12 mx-auto rounded-full bg-primary-container flex items-center justify-center mb-4">
+						<span class="material-symbols-outlined text-on-primary-container"
+							style="font-size: 24px;">check</span>
+					</div>
+					<h2 class="text-xl font-extrabold tracking-tight mb-2">Thank you!</h2>
+					<p class="text-xs text-outline">Your feedback has been recorded.</p>
+				</div>
+
+			</div>
+		</aside>
+	</div>
+
+	<!-- Mobile drawer backdrop -->
+	<div id="mobile-drawer-backdrop"></div>
+
+	<!-- Feedback sheet backdrop (mobile) -->
+	<div id="sheet-backdrop"></div>
+
+	<!-- Share / Export Modal -->
+	<div id="share-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+		<!-- Backdrop -->
+		<div id="share-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+		<!-- Modal Card -->
+		<div
+			class="relative z-10 w-full max-w-md bg-surface-container-high rounded-xl shadow-2xl border border-surface-variant overflow-hidden">
+			<!-- Header -->
+			<div class="flex items-center justify-between px-6 py-5 border-b border-surface-variant">
+				<div class="flex items-center gap-3">
+					<span class="material-symbols-outlined text-primary">download</span>
+					<h2 class="font-headline font-bold text-lg text-on-surface">Export Conversation</h2>
+				</div>
+				<button id="share-modal-close"
+					class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-outline hover:text-on-surface">
+					<span class="material-symbols-outlined" style="font-size:20px">close</span>
+				</button>
+			</div>
+			<!-- Preview -->
+			<div class="px-6 py-5 space-y-4">
+				<div class="bg-surface-container-low rounded-lg p-4 border border-surface-variant">
+					<div class="flex items-center gap-2 mb-3">
+						<span class="material-symbols-outlined text-primary" style="font-size:16px">chat_bubble</span>
+						<span id="export-chat-title" class="text-sm font-semibold text-on-surface truncate"></span>
+					</div>
+					<div class="grid grid-cols-2 gap-3 text-[11px] text-outline">
+						<div class="flex items-center gap-1.5">
+							<span class="material-symbols-outlined" style="font-size:14px">forum</span>
+							<span id="export-message-count"></span>
+						</div>
+						<div class="flex items-center gap-1.5">
+							<span class="material-symbols-outlined" style="font-size:14px">schedule</span>
+							<span id="export-date"></span>
+						</div>
+					</div>
+				</div>
+				<p class="text-[12px] text-outline leading-relaxed">
+					Saves the full conversation as a <span class="text-on-surface-variant font-medium">.json</span>
+					file, including all messages and timestamps.
+				</p>
+			</div>
+			<!-- Actions -->
+			<div class="flex gap-3 px-6 pb-6">
+				<button id="share-modal-cancel"
+					class="flex-1 py-2.5 rounded-lg border border-surface-variant text-on-surface-variant text-sm font-medium hover:bg-surface-variant transition-colors">
+					Cancel
+				</button>
+				<button id="share-modal-download"
+					class="flex-1 py-2.5 rounded-lg bg-primary-container text-on-primary-container text-sm font-semibold hover:opacity-80 transition-opacity flex items-center justify-center gap-2">
+					<span class="material-symbols-outlined" style="font-size:18px">download</span>
+					Save as JSON
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<script src="{{ url_for('static', filename='scripts.js') }}"></script>
+
+	<script>
+			// Inline survey panel submission
+			(function () {
+				const form = document.getElementById('survey-form');
+				const thankyou = document.getElementById('survey-thankyou');
+				if (!form) return;
+
+				form.addEventListener('submit', async (e) => {
+					e.preventDefault();
+					const formData = new FormData(form);
+					const payload = Object.fromEntries(formData.entries());
+					payload.session_id = localStorage.getItem('talk2melatin_session_id') || '';
+
+					try {
+						const res = await fetch("{{ url_for('submit_survey') }}", {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify(payload)
+						});
+						if (!res.ok) throw new Error('Submission failed');
+						form.classList.add('hidden');
+						thankyou.classList.remove('hidden');
+						localStorage.removeItem('talk2melatin_session_id');
+
+						// update mobile peek + collapse to peek so it's unobtrusive
+						const peek = document.getElementById('peek-progress');
+						if (peek) peek.textContent = 'Thank you - submitted';
+						document.getElementById('survey-panel')?.setAttribute('data-state', 'peek');
+						document.getElementById('sheet-backdrop')?.classList.remove('active');
+					} catch (err) {
+						alert('Something went wrong. Please try again.');
+						console.error(err);
+					}
+				});
+			})();
+
+		// Mobile bottom-sheet behaviour
+		(function initMobileSheet() {
+			const panel = document.getElementById('survey-panel');
+			const handle = document.getElementById('sheet-handle');
+			const header = document.getElementById('sheet-header');
+			const backdrop = document.getElementById('sheet-backdrop');
+			const progressEl = document.getElementById('peek-progress');
+			const form = document.getElementById('survey-form');
+			const messageInput = document.getElementById('message-input');
+			if (!panel || !form) return;
+
+			const mq = window.matchMedia('(max-width: 767px)');
+			const isMobile = () => mq.matches;
+
+			function setState(next) {
+				panel.dataset.state = next;
+				if (next === 'peek' || !isMobile()) {
+					backdrop.classList.remove('active');
+				} else {
+					backdrop.classList.add('active');
+					// close the nav drawer if it happens to be open
+					document.getElementById('sidebar')?.classList.remove('mobile-open');
+					document.getElementById('mobile-drawer-backdrop')?.classList.remove('active');
+				}
+			}
+
+			// Tap header → toggle peek ↔ half
+			header.addEventListener('click', () => {
+				if (!isMobile()) return;
+				setState(panel.dataset.state === 'peek' ? 'half' : 'peek');
+			});
+
+			// Tap backdrop → collapse
+			backdrop.addEventListener('click', () => setState('peek'));
+
+			// Drag handle: free drag with snap, or tap to cycle peek → half → full → peek
+			let startY = 0, startH = 0, dragging = false, dragged = false, pid = null;
+			const DRAG_THRESHOLD = 6;
+
+			handle.addEventListener('pointerdown', (e) => {
+				if (!isMobile()) return;
+				dragging = true; dragged = false;
+				pid = e.pointerId;
+				startY = e.clientY;
+				startH = panel.offsetHeight;
+				handle.setPointerCapture(pid);
+			});
+
+			handle.addEventListener('pointermove', (e) => {
+				if (!dragging || e.pointerId !== pid) return;
+				const dy = startY - e.clientY;
+				if (!dragged && Math.abs(dy) > DRAG_THRESHOLD) {
+					dragged = true;
+					panel.style.transition = 'none';
+				}
+				if (dragged) {
+					const h = Math.min(Math.max(startH + dy, 56), window.innerHeight * 0.95);
+					panel.style.height = h + 'px';
+				}
+			});
+
+			function endDrag(e) {
+				if (!dragging || e.pointerId !== pid) return;
+				const wasDragged = dragged;
+				dragging = false; dragged = false;
+				try { handle.releasePointerCapture(pid); } catch (_) { }
+
+				if (wasDragged) {
+					panel.style.transition = '';
+					const h = panel.offsetHeight;
+					panel.style.height = '';  // hand control back to CSS
+					const vh = window.innerHeight;
+					if (h < vh * 0.2) setState('peek');
+					else if (h < vh * 0.75) setState('half');
+					else setState('full');
+				} else {
+					// plain tap: cycle
+					const s = panel.dataset.state;
+					setState(s === 'peek' ? 'half' : s === 'half' ? 'full' : 'peek');
+				}
+			}
+			handle.addEventListener('pointerup', endDrag);
+			handle.addEventListener('pointercancel', endDrag);
+
+			// Progress counter (2 selects + 7 likerts = 9 required)
+			function updateProgress() {
+				if (!progressEl) return;
+				const selects = form.querySelectorAll('select[required]');
+				const radioNames = new Set();
+				form.querySelectorAll('input[type="radio"][required]')
+					.forEach(el => radioNames.add(el.name));
+
+				let filled = 0;
+				selects.forEach(s => { if (s.value) filled++; });
+				radioNames.forEach(name => {
+					if (form.querySelector(`input[name="${CSS.escape(name)}"]:checked`)) filled++;
+				});
+				const total = selects.length + radioNames.size;
+				progressEl.textContent = `${filled} of ${total} answered`;
+			}
+			form.addEventListener('change', updateProgress);
+			updateProgress();
+
+			// Optional: duck the sheet while the chat composer has focus
+			if (messageInput) {
+				messageInput.addEventListener('focus', () => {
+					if (isMobile()) panel.classList.add('keyboard-hidden');
+				});
+				messageInput.addEventListener('blur', () => {
+					panel.classList.remove('keyboard-hidden');
+				});
+			}
+
+			// Reset when crossing the breakpoint
+			mq.addEventListener('change', () => {
+				setState('peek');
+				panel.style.height = '';
+				panel.classList.remove('keyboard-hidden');
+			});
+		})();
+	</script>
+
+</body>
+
+</html>
