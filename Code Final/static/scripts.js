@@ -139,22 +139,23 @@ function renderSidebarChats() {
 
 // -----------------------------------------------------------------------------------------------
 // THEME TOGGLE
+// Theme toggle disabled: light theme only.
 
-const themeToggleBtn = document.getElementById('theme-toggle');
-const themeIcon = document.getElementById('theme-icon');
-const htmlElement = document.documentElement;
+// const themeToggleBtn = document.getElementById('theme-toggle');
+// const themeIcon = document.getElementById('theme-icon');
+// const htmlElement = document.documentElement;
 
-themeToggleBtn.addEventListener('click', () => {
-  if (htmlElement.classList.contains('dark')) {
-    htmlElement.classList.remove('dark');
-    themeIcon.textContent = 'dark_mode';
-    localStorage.setItem('theme', 'light');
-  } else {
-    htmlElement.classList.add('dark');
-    themeIcon.textContent = 'light_mode';
-    localStorage.setItem('theme', 'dark');
-  }
-});
+// themeToggleBtn.addEventListener('click', () => {
+//   if (htmlElement.classList.contains('dark')) {
+//     htmlElement.classList.remove('dark');
+//     themeIcon.textContent = 'dark_mode';
+//     localStorage.setItem('theme', 'light');
+//   } else {
+//     htmlElement.classList.add('dark');
+//     themeIcon.textContent = 'light_mode';
+//     localStorage.setItem('theme', 'dark');
+//   }
+// });
 
 
 // -----------------------------------------------------------------------------------------------
@@ -348,11 +349,9 @@ async function sendMessage() {
   const typingRow = addTyping();
 
   try {
-    const res = await fetch('/chat', {
+    const res = await fetch(`${window.URL_PREFIX}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      // body: JSON.stringify({ message: text })
-      // body: JSON.stringify({ message: text, session_id: SESSION_ID })
       body: JSON.stringify({ message: text, session_id: SESSION_ID, chat_id: currentChatId })
     });
     const data = await res.json();
@@ -551,8 +550,9 @@ document.getElementById('menu-delete').addEventListener('click', () => {
 // INIT
 
 window.addEventListener('load', () => {
-  // Sync icon to the theme that was applied by the inline script
-  themeIcon.textContent = htmlElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
+  // Theme toggle disabled: light theme only.
+  // // Sync icon to the theme that was applied by the inline script
+  // themeIcon.textContent = htmlElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
 
   renderSidebarChats();
 

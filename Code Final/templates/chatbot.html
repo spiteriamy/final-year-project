@@ -8,6 +8,7 @@
 	<title>Talk2MeLatin</title>
 
 	<!-- Apply saved theme before first paint to prevent flash -->
+	<!-- Theme toggle disabled: light theme only.
 	<script>
 		(function () {
 			const saved = localStorage.getItem('theme');
@@ -19,6 +20,7 @@
 			}
 		})();
 	</script>
+	-->
 
 	<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
@@ -108,9 +110,9 @@
 	<link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
 
 	<style>
-		/* ========== Survey panel styles ========== */
+		/* Survey panel styles */
 
-		/* Likert radio row — compact for narrow sidebar */
+		/* Likert radio row - compact for narrow sidebar */
 		.likert-row {
 			display: grid;
 			grid-template-columns: repeat(5, 1fr);
@@ -165,7 +167,7 @@
 			color: #ffffff;
 		}
 
-		/* Form field base styling — scoped to survey panel */
+		/* Form field base styling - scoped to survey panel */
 		#survey-panel textarea,
 		#survey-panel select {
 			background: rgba(39, 39, 42, 0.4);
@@ -284,12 +286,13 @@
 				</div>
 
 				<div class="flex items-center gap-4">
-					<!-- Light/Dark Theme Toggle -->
+					<!-- Theme toggle disabled: light theme only.
 					<button class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400"
 						id="theme-toggle">
 						<span class="material-symbols-outlined" style="font-size:22px; display:block;"
 							id="theme-icon">light_mode</span>
 					</button>
+					-->
 
 					<!-- Share Button -->
 					<button id="share-btn"
@@ -593,6 +596,7 @@
 		</div>
 	</div>
 
+	<script>window.URL_PREFIX = "{{ request.script_root }}";</script>
 	<script src="{{ url_for('static', filename='scripts.js') }}"></script>
 
 	<script>
@@ -657,16 +661,16 @@
 				}
 			}
 
-			// Tap header → toggle peek ↔ half
+			// Tap header -> toggle peek - half
 			header.addEventListener('click', () => {
 				if (!isMobile()) return;
 				setState(panel.dataset.state === 'peek' ? 'half' : 'peek');
 			});
 
-			// Tap backdrop → collapse
+			// Tap backdrop -> collapse
 			backdrop.addEventListener('click', () => setState('peek'));
 
-			// Drag handle: free drag with snap, or tap to cycle peek → half → full → peek
+			// Drag handle: free drag with snap, or tap to cycle peek -> half -> full -> peek
 			let startY = 0, startH = 0, dragging = false, dragged = false, pid = null;
 			const DRAG_THRESHOLD = 6;
 

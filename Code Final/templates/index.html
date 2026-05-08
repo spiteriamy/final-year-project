@@ -7,6 +7,7 @@
 	<title>Talk2MeLatin</title>
 
 	<!-- Apply saved theme before first paint to prevent flash -->
+	<!-- Theme toggle disabled: light theme only.
 	<script>
 		(function () {
 			const saved = localStorage.getItem('theme');
@@ -17,6 +18,8 @@
 			}
 		})();
 	</script>
+	-->
+
 
 	<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
@@ -126,12 +129,13 @@
 			<span class="text-xl font-bold tracking-tight dark:text-[#c6c6c7]">Talk2MeLatin</span>
 		</div>
 
-		<!-- Theme toggle -->
+		<!-- Theme toggle disabled: light theme only.
 		<div class="flex items-center gap-4">
 			<button id="theme-toggle" class="p-1.5 rounded-md hover:bg-surface-variant transition-colors text-zinc-400" aria-label="Toggle theme">
 				<span class="material-symbols-outlined" style="font-size:22px; display:block;" id="theme-icon">dark_mode</span>
 			</button>
 		</div>
+		-->
 
 	</header>
 
@@ -245,11 +249,11 @@
 	</footer>
 
 	<script>
-		// Theme toggle
-		document.getElementById('theme-toggle').addEventListener('click', () => {
-			const isDark = document.documentElement.classList.toggle('dark');
-			localStorage.setItem('theme', isDark ? 'dark' : 'light');
-		});
+		// Theme toggle disabled: light theme only.
+		// document.getElementById('theme-toggle').addEventListener('click', () => {
+		// 	const isDark = document.documentElement.classList.toggle('dark');
+		// 	localStorage.setItem('theme', isDark ? 'dark' : 'light');
+		// });
 	</script>
 
 </body>

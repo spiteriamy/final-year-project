@@ -8,9 +8,11 @@ import sqlite3
 from database import init_db
 from datetime import datetime
 from pathlib import Path
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
 # initialise database
 DB_PATH = Path("survey_responses.db")
@@ -151,7 +153,7 @@ def get_response(user_input):
     # fallback: the asked-about feature doesn't apply to this word's POS
     # (e.g. "what tense is puella" -> puella is a noun, so no tense)
     if feature_key != "pos" and not feature_data.get("applicable", True):
-        pos_label = analysis["pos"]["label"]
+        pos_label = FEATURE_MAPPINGS.get(analysis["pos"]["label"], analysis["pos"]["label"])
         pretty = intent.replace("_", " ")
         return (f"The word '{latin_word}' is a {pos_label}, so it doesn't have a {pretty}.")
 
@@ -197,11 +199,11 @@ def log_message(session_id, chat_id, role, content):
 
 @app.route("/")
 def index():
-    return render_template("landing.html")
+    return render_template("index.html")
 
 @app.route("/chatbot")
 def chatbot():
-    return render_template("index.html")
+    return render_template("chatbot.html")
     
 @app.route("/chat", methods=["POST"])
 def chat():
