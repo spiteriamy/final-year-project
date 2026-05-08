@@ -14,13 +14,16 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
+
 # initialise database
 DB_PATH = Path("survey_responses.db")
 init_db(DB_PATH)  # run once at import time
 
+
 # Load response templates once at startup
 with open(os.path.join("response_templates.json"), "r", encoding="utf-8") as f:
     RESPONSE_TEMPLATES = json.load(f)
+
 
 # Map intent labels -> morphology feature keys
 INTENT_TO_FEATURE = {
@@ -34,6 +37,7 @@ INTENT_TO_FEATURE = {
     "gender": "gender",
     # aspect / declension / conjugation: not produced by the analyser yet
 }
+
 
 # feature to readable name mapping for user-facing messages
 FEATURE_MAPPINGS = {
@@ -50,6 +54,15 @@ FEATURE_MAPPINGS = {
     "Pt": "possessive reflexive pronoun", "Px": "indefinite pronoun", "R-": "preposition", "V-": "verb",
     "Fut": "future", "FutPerf": "future perfect", "Imp": "imperfect", "Perf": "perfect", "Plup": "pluperfect", "Pres": "present",
     "Act": "active", "Pass": "passive"
+}
+
+
+GREETINGS = {
+    "hello", "hi", "hey", "howdy", "greetings", "salutations",
+    "good morning", "good afternoon", "good evening", "good day",
+    "hiya", "yo", "sup", "hi there", "hello there", "hey there",
+    "whats up", "whats new", "hows it going", "how are you",
+    "what do you do", "who are you", "what can you do", "what is this"
 }
 
 
@@ -81,6 +94,9 @@ morphological_analyser = MorphologicalAnalyserService(
 
 ENGLISH_VOCAB = set(w.lower() for w in words.words())
 
+
+# --- Helper functions -------------------------------------------------------------------
+
 def tokenize(sentence: str) -> list[str]:
     """Split on whitespace and remove punctuation."""
     return re.findall(r"[A-Za-zÀ-ÿ']+", sentence)
@@ -106,11 +122,12 @@ def extract_latin_word(sentence: str) -> str | None:
         # found multiple non english words
         return None
 
-
-# --- Helper functions -------------------------------------------------------------------
-
 def get_response(user_input):
     print(f"[LOG] User input: {user_input}")
+
+    # greetings don't need intent classification or morphology
+    if is_greeting(user_input):
+        return RESPONSE_TEMPLATES["intents"]["greeting"]["templates"][0]["text"]
 
     # step 1: intent classification
     result = intent_classifier.classify(user_input)
@@ -194,6 +211,16 @@ def log_message(session_id, chat_id, role, content):
             "INSERT INTO messages (session_id, chat_id, timestamp, role, content) VALUES (?, ?, ?, ?, ?)",
             (session_id, chat_id, datetime.utcnow().isoformat(), role, content)
         )
+
+def is_greeting(text: str) -> bool:
+    """True if the input is a standalone greeting (not a question that starts with one)."""
+    normalized = text.lower().strip()
+    normalized = re.sub(r"[''`]", "", normalized) # remove apostrophes
+    normalized = re.sub(r"^[!.,?]+|[!.,?]+$", "", normalized).strip()
+    normalized = re.sub(r"\s+", " ", normalized)
+    return normalized in GREETINGS
+
+
 
 # --- Flask routes -----------------------------------------------------------------------
 

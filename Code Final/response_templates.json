@@ -135,12 +135,19 @@
                 }
             ]
         },
-        "oos" : {
+        "oos": {
             "templates": [
                 {
                     "text": "Sorry, I don't understand that. Can you please rephrase?",
-                    "slots": [
-                    ]
+                    "slots": []
+                }
+            ]
+        },
+        "greeting": {
+            "templates": [
+                {
+                    "text": "Hello! I'm here to answer questions about Latin grammar. Try asking me about a word's part of speech, tense, case, gender, and so on.",
+                    "slots": []
                 }
             ]
         }
