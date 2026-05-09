@@ -68,6 +68,8 @@ function updateChatTitle(firstMessage) {
   }
 }
 
+// Disabled: delete functionality removed.
+/*
 function deleteChat(chatId) {
   // Remove messages
   localStorage.removeItem(`chat_${chatId}`);
@@ -87,6 +89,7 @@ function deleteChat(chatId) {
     renderSidebarChats();
   }
 }
+*/
 
 function renderSidebarChats() {
   const listEl = document.getElementById('chat-list');
@@ -112,15 +115,19 @@ function renderSidebarChats() {
           <span class="material-symbols-outlined flex-shrink-0" style="font-size:18px">chat_bubble</span>
           <span class="truncate sidebar-chat-label">${chat.title}</span>
         </a>
+        <!-- Disabled: delete functionality removed.
         <button
           class="chat-delete-btn flex-shrink-0 mr-2 p-0.5 rounded opacity-0 group-hover/item:opacity-100 transition-opacity hover:text-error"
           title="Delete chat"
           data-id="${chat.id}">
           <span class="material-symbols-outlined" style="font-size:16px">close</span>
         </button>
+        -->
       </div>`;
   }).join('');
 
+  // Disabled: delete functionality removed.
+  /*
   // Attach delete listeners
   listEl.querySelectorAll('.chat-delete-btn').forEach(btn => {
     btn.addEventListener('click', e => {
@@ -134,6 +141,7 @@ function renderSidebarChats() {
       }
     });
   });
+  */
 }
 
 
@@ -477,7 +485,8 @@ document.getElementById('share-backdrop').addEventListener('click', closeShareMo
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     closeShareModal();
-    moreMenu.classList.add('hidden');
+    // Disabled: more menu removed.
+    // moreMenu.classList.add('hidden');
   }
 });
 
@@ -485,7 +494,9 @@ document.addEventListener('keydown', e => {
 
 // -----------------------------------------------------------------------------------------------
 // MORE OPTIONS MENU
+// Disabled: rename/delete functionality removed.
 
+/*
 const moreBtn = document.getElementById('more-btn');
 const moreMenu = document.getElementById('more-menu');
 
@@ -530,20 +541,8 @@ document.getElementById('menu-delete').addEventListener('click', () => {
     deleteChat(currentChatId);
   }
 });
+*/
 
-
-
-
-
-// -----------------------------------------------------------------------------------------------
-// SURVEY
-
-// feedbackBtn = document.getElementById('feedback-btn');
-
-// // redirect to survey page with session ID as query parameter
-// feedbackBtn.addEventListener('click', () => {
-//   window.location.href = `survey?sid=${SESSION_ID}`;
-// });
 
 
 // -----------------------------------------------------------------------------------------------
