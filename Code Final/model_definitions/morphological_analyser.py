@@ -336,12 +336,14 @@ def predict_with_confidence(
         pos_str = id2label_all["pos"][pos_idx]
         pos_threshold = thresholds.get("pos", 0.0)
 
+        pos_needs_fallback = pos_confidence < pos_threshold
+
         result = {
             "word": sentence_words[word_id],
             "pos": {
                 "label": pos_str,
                 "confidence": round(pos_confidence, 4),
-                "needs_fallback": pos_confidence < pos_threshold,
+                "needs_fallback": pos_needs_fallback,
                 "probabilities": {id2label_all["pos"][i]: round(p, 4)
                                   for i, p in enumerate(pos_probs[token_idx].cpu().tolist())
                                   if p > 0.01},  # only show probs > 1%
@@ -362,7 +364,7 @@ def predict_with_confidence(
                 result[feat] = {
                     "label": id2label_all[feat][feat_pred_idx.item()],
                     "confidence": round(feat_confidence, 4),
-                    "needs_fallback": feat_confidence < feat_threshold,
+                    "needs_fallback": pos_needs_fallback or (feat_confidence < feat_threshold),
                     "applicable": True,
                     "probabilities": {id2label_all[feat][i]: round(p, 4)
                                       for i, p in enumerate(feat_probs.cpu().tolist())
@@ -372,7 +374,7 @@ def predict_with_confidence(
                 result[feat] = {
                     "label": "—",
                     "confidence": None,
-                    "needs_fallback": False,
+                    "needs_fallback": pos_needs_fallback,
                     "applicable": False,
                 }
 

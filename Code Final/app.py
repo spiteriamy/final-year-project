@@ -9,6 +9,7 @@ from database import init_db
 from datetime import datetime
 from pathlib import Path
 from werkzeug.middleware.proxy_fix import ProxyFix
+from latin_lookup import LatinWordsDB, build_fallback_response, format_csv_values
 
 
 app = Flask(__name__)
@@ -66,6 +67,11 @@ GREETINGS = {
 }
 
 
+# load db
+print("Loading Latin words database...")
+latin_words_db = LatinWordsDB(os.path.join("data", "words_data.csv"))
+
+
 # Load models once at startup
 
 print("Loading models...")
@@ -101,26 +107,33 @@ def tokenize(sentence: str) -> list[str]:
     """Split on whitespace and remove punctuation."""
     return re.findall(r"[A-Za-zÀ-ÿ']+", sentence)
 
-def extract_latin_word(sentence: str) -> str | None:
+# def extract_latin_word(sentence: str) -> str | None:
+#     """
+#     Find the Latin word in a user's question by identifying the token
+#     that isn't in the English vocabulary.
+#     Returns the Latin word, or None if extraction is ambiguous.
+#     """
+#     tokens = tokenize(sentence)
+    
+#     # Find tokens not in English vocab (case-insensitive check)
+#     non_english = [t for t in tokens if t.lower() not in ENGLISH_VOCAB]
+    
+#     if len(non_english) == 1:
+#         # found one non english word
+#         return non_english[0]
+#     elif len(non_english) == 0:
+#         # found no non english words
+#         return None  # No Latin word found
+#     else:
+#         # found multiple non english words
+#         return None
+    
+def extract_latin_words(sentence: str) -> list[str]:
     """
-    Find the Latin word in a user's question by identifying the token
-    that isn't in the English vocabulary.
-    Returns the Latin word, or None if extraction is ambiguous.
+    Find tokens in the sentence that aren't in the English vocabulary.
     """
     tokens = tokenize(sentence)
-    
-    # Find tokens not in English vocab (case-insensitive check)
-    non_english = [t for t in tokens if t.lower() not in ENGLISH_VOCAB]
-    
-    if len(non_english) == 1:
-        # found one non english word
-        return non_english[0]
-    elif len(non_english) == 0:
-        # found no non english words
-        return None  # No Latin word found
-    else:
-        # found multiple non english words
-        return None
+    return [t for t in tokens if t.lower() not in ENGLISH_VOCAB]
 
 def get_response(user_input):
     print(f"[LOG] User input: {user_input}")
@@ -136,9 +149,16 @@ def get_response(user_input):
     print(f"[LOG] Intent: {intent}, Confidence: {confidence}")
 
     # step 2: extract latin word
-    # TODO: implement a better method for this
-    latin_word = extract_latin_word(user_input)
-    print(f"[LOG] Extracted Latin word: {latin_word}")
+    # latin_word = extract_latin_word(user_input)
+    # print(f"[LOG] Extracted Latin word: {latin_word}")
+
+    latin_words = extract_latin_words(user_input)
+    print(f"[LOG] Extracted Latin words: {latin_words}")
+
+    if len(latin_words) > 1:
+        return "I can only answer questions about one Latin word at a time. Could you rephrase?"
+
+    latin_word = latin_words[0] if latin_words else None
 
     # step 3: morphological analysis
     morphology = morphological_analyser.analyse(latin_word) if latin_word else None
@@ -160,8 +180,18 @@ def get_response(user_input):
     analysis = morphology[0]  # single-word queries for now
 
     # fallback: unsupported intent (morphological analyser doesnt cover this feature)
+    # feature_key = INTENT_TO_FEATURE.get(intent)
+    # if feature_key is None:
+    #     pretty = intent.replace("_", " ")
+    #     return f"Sorry, I don't yet support questions about {pretty}."
+    
+    # intent isn't covered by the analyser - try the CSV directly
     feature_key = INTENT_TO_FEATURE.get(intent)
     if feature_key is None:
+        if latin_words_db.supports_intent(intent):
+            response = build_fallback_response(latin_words_db, latin_word, intent, None)
+            print(f"[LOG] Analyser doesn't cover '{intent}', DB response: {response}")
+            return response
         pretty = intent.replace("_", " ")
         return f"Sorry, I don't yet support questions about {pretty}."
 
@@ -169,17 +199,37 @@ def get_response(user_input):
 
     # fallback: the asked-about feature doesn't apply to this word's POS
     # (e.g. "what tense is puella" -> puella is a noun, so no tense)
-    if feature_key != "pos" and not feature_data.get("applicable", True):
+    # if feature_key != "pos" and not feature_data.get("applicable", True):
+    #     pos_label = FEATURE_MAPPINGS.get(analysis["pos"]["label"], analysis["pos"]["label"])
+    #     pretty = intent.replace("_", " ")
+    #     return (f"The word '{latin_word}' is a {pos_label}, so it doesn't have a {pretty}.")
+    
+    # resolve POS label + applicability from analyser if confident, else DB
+    if analysis["pos"].get("needs_fallback", False):
+        db_pos = latin_words_db.lookup_feature(latin_word, "part_of_speech")
+        pos_label = format_csv_values(db_pos) if db_pos else None
+        feature_applicable = latin_words_db.feature_applies(latin_word, intent)
+    else:
         pos_label = FEATURE_MAPPINGS.get(analysis["pos"]["label"], analysis["pos"]["label"])
+        feature_applicable = feature_data.get("applicable", True)
+
+    if feature_key != "pos" and pos_label and not feature_applicable:
         pretty = intent.replace("_", " ")
-        return (f"The word '{latin_word}' is a {pos_label}, so it doesn't have a {pretty}.")
+        return f"The word '{latin_word}' is a {pos_label}, so it doesn't have a {pretty}."
 
     # fallback: model isn't confident enough
     # (here is where i would fall back to the database)
+    # if feature_data.get("needs_fallback"):
+    #     pretty = intent.replace("_", " ")
+    #     label = FEATURE_MAPPINGS.get(feature_data['label'], feature_data['label'])
+    #     return (f"I'm not confident about the {pretty} of '{latin_word}'. It might be a {label}, but I'm not sure.")
+    
     if feature_data.get("needs_fallback"):
-        pretty = intent.replace("_", " ")
-        label = FEATURE_MAPPINGS.get(feature_data['label'], feature_data['label'])
-        return (f"I'm not confident about the {pretty} of '{latin_word}'. It might be a {label}, but I'm not sure.")
+        label = FEATURE_MAPPINGS.get(feature_data["label"], feature_data["label"])
+        model_guess = f"a {label}" if intent == "part_of_speech" else label
+        response = build_fallback_response(latin_words_db, latin_word, intent, model_guess)
+        print(f"[LOG] Fallback response: {response}")
+        return response
 
     # step 4: get response template for this intent
     template = RESPONSE_TEMPLATES["intents"][intent]["templates"][0]
