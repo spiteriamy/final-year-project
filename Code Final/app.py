@@ -10,10 +10,19 @@ from datetime import datetime
 from pathlib import Path
 from werkzeug.middleware.proxy_fix import ProxyFix
 from latin_lookup import LatinWordsDB, build_fallback_response, format_csv_values
+from datetime import datetime, timezone
+from backup import append_jsonl
 
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
+
+
+# jsonl backup 
+BACKUP_DIR = Path("backups")
+BACKUP_DIR.mkdir(exist_ok=True)  # make sure folder exists on first run
+MESSAGES_BACKUP = BACKUP_DIR / "messages.jsonl"
+RESPONSES_BACKUP = BACKUP_DIR / "responses.jsonl"
 
 
 # initialise database
@@ -207,7 +216,7 @@ def get_response(user_input):
     # resolve POS label + applicability from analyser if confident, else DB
     if analysis["pos"].get("needs_fallback", False):
         db_pos = latin_words_db.lookup_feature(latin_word, "part_of_speech")
-        pos_label = format_csv_values(db_pos) if db_pos else None
+        pos_label = format_csv_values(db_pos, "part_of_speech") if db_pos else None
         feature_applicable = latin_words_db.feature_applies(latin_word, intent)
     else:
         pos_label = FEATURE_MAPPINGS.get(analysis["pos"]["label"], analysis["pos"]["label"])
@@ -256,11 +265,23 @@ def get_response(user_input):
     return response
 
 def log_message(session_id, chat_id, role, content):
+    timestamp = datetime.utcnow().isoformat()
     with sqlite3.connect(DB_PATH) as conn:
         conn.execute(
             "INSERT INTO messages (session_id, chat_id, timestamp, role, content) VALUES (?, ?, ?, ?, ?)",
-            (session_id, chat_id, datetime.utcnow().isoformat(), role, content)
+            (session_id, chat_id, timestamp, role, content)
         )
+    # JSONL backup - guarded so a backup failure can't break chat
+    try:
+        append_jsonl(MESSAGES_BACKUP, {
+            "session_id": session_id,
+            "chat_id":    chat_id,
+            "timestamp":  timestamp,
+            "role":       role,
+            "content":    content,
+        })
+    except Exception:
+        app.logger.exception("Failed to write message backup to JSONL")
 
 def is_greeting(text: str) -> bool:
     """True if the input is a standalone greeting (not a question that starts with one)."""
@@ -347,6 +368,14 @@ def submit_survey():
                     :liked_most, :improvements, :other
                 )
             """, row)
+
+        # JSONL backup - guarded so a backup failure doesn't fail the submission
+        # (the DB write above is the source of truth)
+        try:
+            append_jsonl(RESPONSES_BACKUP, row)
+        except Exception:
+            app.logger.exception("Failed to write survey response backup to JSONL")
+
         return jsonify({"status": "ok"})
     except sqlite3.Error as e:
         app.logger.exception("Failed to save survey response")

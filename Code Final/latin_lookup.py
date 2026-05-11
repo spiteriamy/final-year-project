@@ -29,41 +29,41 @@ INTENT_TO_CSV_COLUMN = {
 }
 
 
-# map CSV codes to readable names.
-# Anything not listed here falls back to the lowercased raw value.
+# map CSV codes to readable names
 CSV_FEATURE_MAPPINGS = {
-    # part_of_speech 
-    "ADJ": "adjective", "V": "verb", "N": "noun", "PROPN": "proper noun",
-    "V.PTCP": "participle", "V+V.PTCP": "participle",
-    "V.MSDR": "gerund", "V+V.MSDR": "gerund",
-    # gender
-    "MASC": "masculine", "FEM": "feminine", "NEUT": "neuter",
-    "MASC+FEM": "masculine or feminine", "MASC+NEUT": "masculine or neuter",
-    "FEM+NEUT": "feminine or neuter", "MASC+FEM+NEUT": "masculine, feminine, or neuter",
-    # case
-    "NOM": "nominative", "ACC": "accusative", "GEN": "genitive",
-    "DAT": "dative", "ABL": "ablative", "VOC": "vocative", "LOC": "locative",
-    "GEN+DAT": "genitive or dative",
-    # number
-    "SG": "singular", "PL": "plural",
-    # tense
-    "PRS": "present", "PST": "past", "FUT": "future",
-    # aspect
-    "IPFV": "imperfective", "PRF": "perfect", "PFV": "perfective",
-    # voice
-    "ACT": "active", "PASS": "passive",
-    # mood
-    "IND": "indicative", "SBJV": "subjunctive", "IMP": "imperative",
-    # person
-    "1": "1st person", "2": "2nd person", "3": "3rd person",
-    # finiteness
-    "NFIN": "nonfinite",
-    # language-specific features
-    "LGSPEC1": "supine",
-    # conjugation
-    # declension
-    # degree
-    # participle type
+    "part_of_speech": {
+        "ADJ": "adjective", "V": "verb", "N": "noun", "PROPN": "proper noun",
+        "V.PTCP": "participle", "V+V.PTCP": "participle",
+        "V.MSDR": "gerund", "V+V.MSDR": "gerund",
+    },
+    "gender": {
+        "MASC": "masculine", "FEM": "feminine", "NEUT": "neuter",
+        "MASC+FEM": "masculine or feminine", "MASC+NEUT": "masculine or neuter",
+        "FEM+NEUT": "feminine or neuter", "MASC+FEM+NEUT": "masculine, feminine, or neuter",
+    },
+    "case": {
+        "NOM": "nominative", "ACC": "accusative", "GEN": "genitive",
+        "DAT": "dative", "ABL": "ablative", "VOC": "vocative", "LOC": "locative",
+        "GEN+DAT": "genitive or dative",
+    },
+    "number": {"SG": "singular", "PL": "plural"},
+    "tense":  {"PRS": "present", "PST": "past", "FUT": "future"},
+    "aspect": {"IPFV": "imperfective", "PRF": "perfect", "PFV": "perfective"},
+    "voice":  {"ACT": "active", "PASS": "passive"},
+    "mood":   {"IND": "indicative", "SBJV": "subjunctive", "IMP": "imperative"},
+    "person": {"1": "1st person", "2": "2nd person", "3": "3rd person"},
+    "conjugation": {
+        "1": "1st conjugation", "2": "2nd conjugation",
+        "3": "3rd conjugation", "4": "4th conjugation",
+    },
+    "declension": {
+        "1": "1st declension", "2": "2nd declension", "3": "3rd declension",
+        "4": "4th declension", "5": "5th declension",
+    },
+    "degree": {"POS": "positive", "COMP": "comparative", "SUPER": "superlative"},
+    "finiteness":      {"NFIN": "nonfinite"},
+    "lang_specific":   {"LGSPEC1": "supine"},
+    "participle_type": {"PPL": "participle"},
 }
 
 
@@ -136,11 +136,13 @@ class LatinWordsDB:
         return any(row.get(column, "").strip() for row in entries)
 
 
-def format_csv_values(values: list[str]) -> str:
+
+def format_csv_values(values: list[str], column: str) -> str:
     """
-    Turn ['GEN', 'NOM'] into 'genitive or nominative'.
+    Turn ['GEN', 'NOM'] into 'genitive or nominative' for the given column.
     """
-    pretty = [CSV_FEATURE_MAPPINGS.get(v, v.lower()) for v in values]
+    mapping = CSV_FEATURE_MAPPINGS.get(column, {})
+    pretty = [mapping.get(v, v.lower()) for v in values]
     if len(pretty) == 1:
         return pretty[0]
     if len(pretty) == 2:
@@ -162,7 +164,7 @@ def build_fallback_response(db: LatinWordsDB, latin_word: str, intent: str, mode
     print(f"[LOG] DB fallback for '{latin_word}' - {intent}: {db_values}")
 
     if db_values:
-        formatted = format_csv_values(db_values)
+        formatted = format_csv_values(db_values, intent)
 
         if len(db_values) == 1:
             return f"The {pretty_intent} of '{latin_word}' is {formatted}."
