@@ -54,8 +54,6 @@ ALL_FEATS = ["pos"] + FEATURE_ORDER
 # defines which of the morphological features are applicable per POS.
 # Order matches `FEATURE_ORDER`: person, number, tense, mood, voice, gender, case, degree
 
-# TODO: FIX TRUTH VALUES, CURRENTLY NOT ALL CORRECT
-
 #          per    num    tense  mood   voice  gender case   degree
 POS_FEATURE_MASK = {
     "A-": [False, True,  False, False, False, True,  True,  True  ],  # adjective
@@ -68,22 +66,22 @@ POS_FEATURE_MASK = {
     "I-": [False, False, False, False, False, False, False, False ],  # interjection
     "Ma": [False, True,  False, False, False, True,  True,  False ],  # cardinal numeral
     "Mo": [False, True,  False, False, False, True,  True,  False ],  # ordinal numeral
-    "N-": [False, False, False, False, False, False, False, False ],  # infinitive marker
-    "Nb": [False, True,  False, False, False, True,  True,  False ],  # common noun                         +
-    "Ne": [False, True,  False, False, False, True,  True,  False ],  # proper noun                         +
-    "Pc": [False, True,  False, False, False, True,  True,  False ],  # reciprocal pronoun                  +
+    "N-": [False, False, False, False, False, False, False, False ],  # infinitive marker (not found in corpus)
+    "Nb": [False, True,  False, False, False, True,  True,  False ],  # common noun
+    "Ne": [False, True,  False, False, False, True,  True,  False ],  # proper noun
+    "Pc": [False, True,  False, False, False, True,  True,  False ],  # reciprocal pronoun
     "Pd": [False, True,  False, False, False, True,  True,  False ],  # demonstrative pronoun
     "Pi": [False, True,  False, False, False, True,  True,  False ],  # interrogative pronoun
-    "Pk": [False, True,  False, False, False, True,  True,  False ],  # personal reflexive pronoun
-    "Pp": [True,  True,  False, False, False, True,  True,  False ],  # personal pronoun                    +
+    "Pk": [True,  True,  False, False, False, True,  True,  False ],  # personal reflexive pronoun
+    "Pp": [True,  True,  False, False, False, True,  True,  False ],  # personal pronoun
     "Pr": [False, True,  False, False, False, True,  True,  False ],  # relative pronoun
-    "Ps": [False, True,  False, False, False, True,  True,  False ],  # possessive pronoun
-    "Pt": [False, True,  False, False, False, True,  True,  False ],  # possessive reflexive pronoun
+    "Ps": [True,  True,  False, False, False, True,  True,  False ],  # possessive pronoun
+    "Pt": [True,  True,  False, False, False, True,  True,  False ],  # possessive reflexive pronoun
     "Px": [False, True,  False, False, False, True,  True,  False ],  # indefinite pronoun
-    "Py": [False, False, False, False, False, False, False, False ],  # quantifier
+    "Py": [False, False, False, False, False, False, False, False ],  # quantifier (not found in corpus)
     "R-": [False, False, False, False, False, False, False, False ],  # preposition
-    "S-": [False, False, False, False, False, False, False, False ],  # article
-    "V-": [True,  True,  True,  True,  True,  False, False, False ],  # verb                                +
-    "X-": [False, False, False, False, False, False, False, False ]   # unassigned                          +
+    "S-": [False, False, False, False, False, False, False, False ],  # article (not found in corpus)
+    "V-": [True,  True,  True,  True,  True,  False, False, False ],  # verb
+    "X-": [False, False, False, False, False, False, False, False ]   # unassigned
 }
 
