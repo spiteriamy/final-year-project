@@ -190,7 +190,7 @@ class LatinMorphologicalAnalyser(PreTrainedModel):
     if labels_pos is not None:
       import torch.nn.functional as F
 
-      # POS loss — always computed for all valid tokens
+      # POS loss - always computed for all valid tokens
       pos_loss = F.cross_entropy(
           pos_logits.view(-1, pos_logits.size(-1)),
           labels_pos.view(-1),
