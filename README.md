@@ -6,5 +6,3 @@ Amy Spiteri
 
 Department of Artificial Intelligence, University of Malta 
 
-amy.spiteri.23@um.edu.mt 
-
