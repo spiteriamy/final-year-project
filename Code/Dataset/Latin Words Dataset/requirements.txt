@@ -1,5 +1,0 @@
-pexpect
-
-pandas
-
-tqdm
