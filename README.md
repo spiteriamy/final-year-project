@@ -1,8 +1,8 @@
-# Talk2MeLatin
+# Talk2MeLatin - Final Year Project in Artificial Intelligence
 
-Bachelor of Science in Information Technology (Honours) (Artificial Intelligence) - Final Year Project in Artificial Intelligence
+This repository contains all code and artefacts produced as part of my Final Year Project for the Bachelor of Science in Information Technology (Honours) (Artificial Intelligence).
 
-Amy Spiteri
+The project addresses a lack of AI-based tools dedicated to Latin language learning through the development of a conversational chatbot system designed to answer English‐language grammar questions about Latin words.
 
-Department of Artificial Intelligence, University of Malta 
+The system combines three main components: an intent classifier, a morphological analyser, and a template‐based response generator, which are all accessible through a web‐based conversational interface that can be found [here](https://nlpgroup.research.um.edu.mt/talk2melatin/). 
 
