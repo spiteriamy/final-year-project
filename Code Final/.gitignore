@@ -1,3 +1,13 @@
 model_weights/
 
 **/__pycache__
+
+backups/
+
+survey_responses.db
+
+
+*/morphological_analyser/previous/*
+*/intent_classifier/final_21_05/*
+*/intent_classifier/final_for_now/*
+*/intent_classifier/previous_attempts/*
