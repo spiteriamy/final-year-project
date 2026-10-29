@@ -62,7 +62,9 @@ FEATURE_MAPPINGS = {
     "Nb": "common noun", "Ne": "proper noun", "Pc": "reciprocal pronoun", "Pd": "demonstrative pronoun", "Pi": "interrogative pronoun",
     "Pk": "personal reflexive pronoun", "Pp": "personal pronoun", "Pr": "relative pronoun", "Ps": "possessive pronoun",
     "Pt": "possessive reflexive pronoun", "Px": "indefinite pronoun", "R-": "preposition", "V-": "verb",
-    "Fut": "future", "FutPerf": "future perfect", "Imp": "imperfect", "Perf": "perfect", "Plup": "pluperfect", "Pres": "present",
+    "Fut": "future", "FutPerf": "future perfect", 
+    # "Imp": "imperfect", 
+    "Perf": "perfect", "Plup": "pluperfect", "Pres": "present",
     "Act": "active", "Pass": "passive"
 }
 
